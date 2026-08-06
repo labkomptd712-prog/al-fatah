@@ -1,3 +1,24 @@
+<?php
+require_once __DIR__ . '/includes/public_init.php';
+
+$gallery_items = [];
+try {
+    $stmt = $pdo->query("SELECT id, caption, image FROM gallery ORDER BY created_at DESC");
+    $gallery_items = $stmt->fetchAll();
+} catch (PDOException $e) {
+    $gallery_items = [];
+}
+
+$news_items = [];
+try {
+    $stmt = $pdo->query("SELECT title, slug, image, created_at FROM news WHERE is_published = 1 ORDER BY created_at DESC LIMIT 3");
+    $news_items = $stmt->fetchAll();
+} catch (PDOException $e) {
+    $news_items = [];
+}
+
+$is_home = true;
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -16,6 +37,9 @@
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Montserrat:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 
+  <!-- Font Awesome 6.5.1 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
   <!-- Vendor CSS Files -->
   <link href="assets/vendor/aos/aos.css" rel="stylesheet">
   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -26,7 +50,7 @@
   <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
 
   <!-- Template Main CSS File -->
-  <link href="/assets/css/style.css" rel="stylesheet">
+  <link href="assets/css/style.css" rel="stylesheet">
 
   <!-- =======================================================
   * Template Name: Bootslander
@@ -44,41 +68,13 @@
     <div class="container d-flex align-items-center justify-content-between">
 
       <div class="logo">
-        <a href="index.html"><img src="assets/img/logo afix.png" alt="" class="img-fluid" ></a>
-        <h1><a href="index.html"><span><I>SDIT AL FATAH</I></span></a></h1> 
+        <a href="index.php"><img src="assets/img/logo afix.png" alt="" class="img-fluid" ></a>
+        <h1><a href="index.php"><span><I>SDIT AL FATAH</I></span></a></h1> 
         <!-- Uncomment below if you prefer to use an image logo -->
       </div>
 
       <!-- navbar-->
-      <nav id="navbar" class="navbar">
-        <ul>
-          <li><a class="nav-link scrollto active" href="#hero">Beranda</a></li>
-          <li class="dropdown"><a href="#"><span>Profil</span> <i class="bi bi-chevron-down"></i></a>
-            <ul>
-              <li><a href="#">Drop Down 1</a></li>
-              <li class="dropdown"><a href="#"><span>Deep Drop Down</span> <i class="bi bi-chevron-right"></i></a>
-                <ul>
-                  <li><a href="#">Deep Drop Down 1</a></li>
-                  <li><a href="#">Deep Drop Down 2</a></li>
-                  <li><a href="#">Deep Drop Down 3</a></li>
-                  <li><a href="#">Deep Drop Down 4</a></li>
-                  <li><a href="#">Deep Drop Down 5</a></li>
-                </ul>
-              </li>
-              <li><a href="#">Drop Down 2</a></li>
-              <li><a href="#">Drop Down 3</a></li>
-              <li><a href="#">Drop Down 4</a></li>
-              <!-- <li><a class="nav-link scrollto" href="#pricing">Pricing</a></li> -->
-            </ul>
-            <li><a class="nav-link scrollto" href="#about">About</a></li>
-            <li><a class="nav-link scrollto" href="#features">Facility</a></li>
-            <li><a class="nav-link scrollto" href="#gallery">Gallery</a></li>
-            <li><a class="nav-link scrollto" href="#team">Team</a></li>
-          </li>
-          <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
-        </ul>
-        <i class="bi bi-list mobile-nav-toggle"></i>
-      </nav><!-- .navbar -->
+      <?php include __DIR__ . '/includes/public_nav.php'; ?>
 
     </div>
   </header><!-- End Header -->
@@ -378,6 +374,49 @@ SDIT Al Fatah dengan bangga mempersembahkan berbagai kegiatan outdoor yang diran
       </div>
     </section><!-- End Details Section -->
 
+    <!-- ======= News Section ======= -->
+    <section id="news" class="news">
+      <div class="container">
+
+        <div class="section-title" data-aos="fade-up">
+          <h2>Berita</h2>
+          <p>Berita Terbaru</p>
+        </div>
+
+        <div class="row gy-4" data-aos="fade-up" data-aos-delay="100">
+          <?php if (empty($news_items)): ?>
+          <div class="col-12 text-center py-4">
+            <p class="text-muted mb-0">Belum ada berita dipublikasikan.</p>
+          </div>
+          <?php else: ?>
+          <?php
+          $news_delay = 100;
+          foreach ($news_items as $item):
+            $has_image = !empty($item['image']);
+            $img_src = $has_image ? ('admin/uploads/' . $item['image']) : 'assets/img/logo afix.png';
+            $href = 'inner-page.php?slug=' . urlencode($item['slug']);
+          ?>
+          <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="<?= (int) $news_delay ?>">
+            <a href="<?= htmlspecialchars($href) ?>" class="news-item">
+              <div class="news-img">
+                <img src="<?= htmlspecialchars($img_src) ?>" alt="<?= htmlspecialchars($item['title']) ?>">
+              </div>
+              <div class="news-info">
+                <h4><?= htmlspecialchars($item['title']) ?></h4>
+                <span class="news-date"><?= date('d F Y', strtotime($item['created_at'])) ?></span>
+              </div>
+            </a>
+          </div>
+          <?php
+            $news_delay += 100;
+          endforeach;
+          ?>
+          <?php endif; ?>
+        </div>
+
+      </div>
+    </section><!-- End News Section -->
+
     <!-- ======= Gallery Section ======= -->
     <section id="gallery" class="gallery">
       <div class="container">
@@ -388,71 +427,31 @@ SDIT Al Fatah dengan bangga mempersembahkan berbagai kegiatan outdoor yang diran
         </div>
 
         <div class="row g-0" data-aos="fade-left">
-
+          <?php if (empty($gallery_items)): ?>
+          <div class="col-12 text-center py-4">
+            <p class="text-muted mb-0">Belum ada foto galeri.</p>
+          </div>
+          <?php else: ?>
+          <?php
+          $delay = 100;
+          foreach ($gallery_items as $photo):
+            $img_path = 'admin/uploads/' . $photo['image'];
+            $alt = ($photo['caption'] !== '' && $photo['caption'] !== null)
+              ? $photo['caption']
+              : 'Galeri SDIT Al Fatah';
+          ?>
           <div class="col-lg-3 col-md-4">
-            <div class="gallery-item" data-aos="zoom-in" data-aos-delay="100">
-              <a href="assets/img/gallery/gallery-1.jpg" class="gallery-lightbox">
-                <img src="assets/img/gallery/alfatah baju olahraga copy.jpeg" alt="" class="img-fluid">
+            <div class="gallery-item" data-aos="zoom-in" data-aos-delay="<?= (int) $delay ?>">
+              <a href="<?= htmlspecialchars($img_path) ?>" class="gallery-lightbox" title="<?= htmlspecialchars($alt) ?>">
+                <img src="<?= htmlspecialchars($img_path) ?>" alt="<?= htmlspecialchars($alt) ?>" class="img-fluid">
               </a>
             </div>
           </div>
-
-          <div class="col-lg-3 col-md-4">
-            <div class="gallery-item" data-aos="zoom-in" data-aos-delay="150">
-              <a href="assets/img/gallery/gallery-2.jpg" class="gallery-lightbox">
-                <img src="assets/img/gallery/alfatah camp copy.jpeg" alt="" class="img-fluid">
-              </a>
-            </div>
-          </div>
-
-          <div class="col-lg-3 col-md-4">
-            <div class="gallery-item" data-aos="zoom-in" data-aos-delay="200">
-              <a href="assets/img/gallery/gallery-3.jpg" class="gallery-lightbox">
-                <img src="assets/img/gallery/alfatah flying fox copy.jpeg" alt="" class="img-fluid">
-              </a>
-            </div>
-          </div>
-
-          <div class="col-lg-3 col-md-4">
-            <div class="gallery-item" data-aos="zoom-in" data-aos-delay="250">
-              <a href="assets/img/gallery/gallery-4.jpg" class="gallery-lightbox">
-                <img src="assets/img/gallery/alfatah holiday copy.jpeg" alt="" class="img-fluid">
-              </a>
-            </div>
-          </div>
-
-          <div class="col-lg-3 col-md-4">
-            <div class="gallery-item" data-aos="zoom-in" data-aos-delay="300">
-              <a href="assets/img/gallery/gallery-5.jpg" class="gallery-lightbox">
-                <img src="assets/img/gallery/alfatah kumpul copy.jpeg" alt="" class="img-fluid">
-              </a>
-            </div>
-          </div>
-
-          <div class="col-lg-3 col-md-4">
-            <div class="gallery-item" data-aos="zoom-in" data-aos-delay="350">
-              <a href="assets/img/gallery/gallery-6.jpg" class="gallery-lightbox">
-                <img src="assets/img/gallery/alfatah olahraga copy.jpeg" alt="" class="img-fluid">
-              </a>
-            </div>
-          </div>
-
-          <div class="col-lg-3 col-md-4">
-            <div class="gallery-item" data-aos="zoom-in" data-aos-delay="400">
-              <a href="assets/img/gallery/gallery-7.jpg" class="gallery-lightbox">
-                <img src="assets/img/gallery/alfatah flying fox copy.jpeg" alt="" class="img-fluid">
-              </a>
-            </div>
-          </div>
-
-          <div class="col-lg-3 col-md-4">
-            <div class="gallery-item" data-aos="zoom-in" data-aos-delay="450">
-              <a href="assets/img/gallery/gallery-8.jpg" class="gallery-lightbox">
-                <img src="assets/img/gallery/alfatah pramuka copy.jpeg" alt="" class="img-fluid">
-              </a>
-            </div>
-          </div>
-
+          <?php
+            $delay += 50;
+          endforeach;
+          ?>
+          <?php endif; ?>
         </div>
 
       </div>
@@ -866,11 +865,8 @@ SDIT Al Fatah dengan bangga mempersembahkan berbagai kegiatan outdoor yang diran
                 <strong>Phone:</strong> +62 0000 0000 0000<br>
                 <strong>Email:</strong> sditalfatah.60@gmail.com<br>
               </p>
-              <div class="social-links mt-3">
-                <a href="https://facebook.com/Sditalfatahbekasi/" class="facebook"><i class="bx bxl-facebook"></i></a>
-                <a href="https://www.instagram.com/sdit_alfatah_bekasi/" class="instagram"><i class="bx bxl-instagram"></i></a>
-                <a href="https://www.youtube.com/@sditalfatahbekasi"><i class='bx bxl-youtube'></i></a>
-              </div>
+              <?php include __DIR__ . '/includes/public_footer_social.php'; ?>
+
             </div>
           </div>
           
@@ -925,7 +921,7 @@ SDIT Al Fatah dengan bangga mempersembahkan berbagai kegiatan outdoor yang diran
     </div>
   </footer><!-- End Footer -->
 
-  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+  <?php include __DIR__ . '/includes/public_wa_float.php'; ?>
   <div id="preloader"></div>
 
   <!-- Vendor JS Files -->

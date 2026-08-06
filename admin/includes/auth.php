@@ -7,7 +7,6 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
-    // Cari letak URL absolut untuk login.php di folder admin/
     $script_name = $_SERVER['SCRIPT_NAME'];
     $admin_pos = strpos($script_name, '/admin/');
     if ($admin_pos !== false) {
@@ -18,4 +17,6 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
     }
     exit();
 }
+
+require_once __DIR__ . '/roles.php';
 ?>

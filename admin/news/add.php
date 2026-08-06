@@ -74,7 +74,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt = $pdo->prepare("INSERT INTO news (title, slug, content, image, is_published) VALUES (?, ?, ?, ?, ?)");
                 $stmt->execute([$title, $slug, $content, $image_name, $is_published]);
 
-                header("Location: list.php?msg=add_success");
+                if (is_editor_role()) {
+                    header("Location: ../dashboard.php?msg=news_add_success");
+                } else {
+                    header("Location: list.php?msg=add_success");
+                }
                 exit();
             } catch (PDOException $e) {
                 $error = "Gagal menyimpan ke database: " . $e->getMessage();

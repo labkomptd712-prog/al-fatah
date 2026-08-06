@@ -1,29 +1,6 @@
 <?php
-/**
- * Detail berita publik — akses via ?slug=judul-berita
- */
 require_once __DIR__ . '/includes/public_init.php';
-
-$slug = trim($_GET['slug'] ?? '');
-$news = null;
-$error = '';
-
-if ($slug === '') {
-    $error = 'Berita tidak ditemukan.';
-} else {
-    try {
-        $stmt = $pdo->prepare("SELECT * FROM news WHERE slug = ? AND is_published = 1 LIMIT 1");
-        $stmt->execute([$slug]);
-        $news = $stmt->fetch();
-        if (!$news) {
-            $error = 'Berita tidak ditemukan atau belum dipublikasikan.';
-        }
-    } catch (PDOException $e) {
-        $error = 'Gagal memuat berita.';
-    }
-}
-
-$page_title = $news ? $news['title'] : 'Berita Tidak Ditemukan';
+$page_title = 'Sejarah';
 $is_home = false;
 ?>
 <!DOCTYPE html>
@@ -32,17 +9,11 @@ $is_home = false;
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-
-  <title><?= htmlspecialchars($page_title) ?> - SDIT AL FATAH</title>
-  <meta content="" name="description">
-  <meta content="" name="keywords">
-
+  <title>Sejarah - SDIT AL FATAH</title>
   <link href="assets/img/logo afix.png" rel="icon">
   <link href="assets/img/logo afix.png" rel="apple-touch-icon">
-
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Montserrat:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
   <link href="assets/vendor/aos/aos.css" rel="stylesheet">
   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
@@ -66,41 +37,32 @@ $is_home = false;
   </header>
 
   <main id="main">
-
     <section class="breadcrumbs">
       <div class="container">
         <div class="d-flex justify-content-between align-items-center">
-          <h2><?= htmlspecialchars($page_title) ?></h2>
+          <h2>Sejarah</h2>
           <ol>
             <li><a href="index.php">Beranda</a></li>
-            <li>Berita</li>
+            <li>Sejarah</li>
           </ol>
         </div>
       </div>
     </section>
 
-    <section class="inner-page news-detail">
+    <section class="inner-page">
       <div class="container" data-aos="fade-up">
-        <?php if ($error || !$news): ?>
-          <p><?= htmlspecialchars($error ?: 'Berita tidak ditemukan.') ?></p>
-          <p><a href="index.php">Kembali ke Beranda</a></p>
-        <?php else: ?>
-          <?php if (!empty($news['image'])): ?>
-          <div class="news-cover">
-            <img src="admin/uploads/<?= htmlspecialchars($news['image']) ?>" alt="<?= htmlspecialchars($news['title']) ?>">
-          </div>
-          <?php endif; ?>
-          <p class="news-meta">
-            <i class="bi bi-calendar3"></i>
-            <?= date('d F Y', strtotime($news['created_at'])) ?>
-          </p>
-          <div class="news-body">
-            <?= $news['content'] ?>
-          </div>
-        <?php endif; ?>
+        <div class="section-title">
+          <h2>Profil</h2>
+          <p>Sejarah Sekolah</p>
+        </div>
+        <div style="color:#444; line-height:1.8; font-size:1.05rem;">
+          <p><strong>[TULIS SEJARAH SEKOLAH DI SINI - ceritakan tentang pendirian, perkembangan, dan pencapaian sekolah]</strong></p>
+          <p>[Tambahkan paragraf tentang latar belakang pendirian SDIT Al Fatah di sini.]</p>
+          <p>[Tambahkan paragraf tentang perkembangan dan pencapaian sekolah di sini.]</p>
+          <p><em>Catatan: Ganti semua teks placeholder di halaman ini dengan konten sejarah resmi sekolah.</em></p>
+        </div>
       </div>
     </section>
-
   </main>
 
   <footer id="footer">
@@ -168,6 +130,5 @@ $is_home = false;
   <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
   <script src="assets/vendor/php-email-form/validate.js"></script>
   <script src="assets/js/main.js"></script>
-
 </body>
 </html>

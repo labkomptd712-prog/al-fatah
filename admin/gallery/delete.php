@@ -1,6 +1,7 @@
 <?php
 // admin/gallery/delete.php
 require_once '../includes/auth.php';
+require_admin_role();
 require_once '../config/db.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

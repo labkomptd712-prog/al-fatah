@@ -1,6 +1,7 @@
 <?php
 // admin/news/list.php
 require_once '../includes/auth.php';
+require_admin_role();
 require_once '../config/db.php';
 
 try {
