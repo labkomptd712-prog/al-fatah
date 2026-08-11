@@ -13,7 +13,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = trim($_POST['title'] ?? '');
     $slug = trim($_POST['slug'] ?? '');
     $content = trim($_POST['content'] ?? '');
-    $is_published = isset($_POST['is_published']) ? 1 : 0;
+    
+    $status = 'published';
+    if (is_editor_role()) {
+        $status = 'pending';
+    } else {
+        $status = isset($_POST['is_published']) ? 'published' : 'pending';
+    }
 
     // Generate slug if empty
     if (empty($slug)) {
@@ -71,11 +77,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
 
                 // Insert into news table
-                $stmt = $pdo->prepare("INSERT INTO news (title, slug, content, image, is_published) VALUES (?, ?, ?, ?, ?)");
-                $stmt->execute([$title, $slug, $content, $image_name, $is_published]);
+                $created_by = (int) ($_SESSION['admin_id'] ?? 0);
+                $stmt = $pdo->prepare("INSERT INTO news (title, slug, content, image, status, created_by) VALUES (?, ?, ?, ?, ?, ?)");
+                $stmt->execute([$title, $slug, $content, $image_name, $status, $created_by]);
 
                 if (is_editor_role()) {
-                    header("Location: ../dashboard.php?msg=news_add_success");
+                    header("Location: ../dashboard.php?msg=news_submit_success");
                 } else {
                     header("Location: list.php?msg=add_success");
                 }
@@ -176,15 +183,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div class="card border-light bg-light rounded-4 mb-4">
                                 <div class="card-body p-4">
                                     <label class="form-label fw-semibold text-secondary d-block mb-3">Status Publikasi</label>
-                                    <div class="form-check form-switch">
-                                        <input class="form-check-input" type="checkbox" role="switch" id="is_published" name="is_published" value="1" <?= ($is_published == 1) ? 'checked' : '' ?>>
-                                        <label class="form-check-label fw-medium" for="is_published">Terbitkan Berita</label>
-                                    </div>
-                                    <small class="text-muted d-block mt-2">Aktifkan untuk menampilkan berita langsung di website utama.</small>
+                                     <div class="form-check form-switch">
+                                        <?php if (!is_editor_role()): ?>
+                                            <input class="form-check-input" type="checkbox" role="switch" id="is_published" name="is_published" value="1" checked>
+                                            <label class="form-check-label fw-medium" for="is_published">Terbitkan Berita</label>
+                                            <small class="text-muted d-block mt-2">Aktifkan untuk menampilkan berita langsung di website utama.</small>
+                                        <?php else: ?>
+                                            <div class="alert alert-info py-2 px-3 small rounded-3 mb-0">
+                                                <i class="fa-solid fa-clock me-1"></i> Berita akan disubmit dengan status <strong>Pending</strong> untuk persetujuan.
+                                            </div>
+                                        <?php endif; ?>
+                                     </div>
                                 </div>
                             </div>
 
-                            <button type="submit" class="btn btn-brand w-100 py-3 rounded-3 fw-bold"><i class="fa-solid fa-floppy-disk me-2"></i> Simpan Berita</button>
+                            <?php if (is_editor_role()): ?>
+                                <button type="submit" class="btn btn-brand w-100 py-3 rounded-3 fw-bold"><i class="fa-solid fa-paper-plane me-2"></i> Ajukan Berita</button>
+                                <small class="text-muted d-block text-center mt-2">Berita akan tayang setelah disetujui oleh admin.</small>
+                            <?php else: ?>
+                                <button type="submit" class="btn btn-brand w-100 py-3 rounded-3 fw-bold"><i class="fa-solid fa-floppy-disk me-2"></i> Simpan Berita</button>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </form>

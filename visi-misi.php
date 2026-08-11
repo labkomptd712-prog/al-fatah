@@ -27,6 +27,92 @@ $is_home = false;
   <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
   <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
   <link href="assets/css/style.css" rel="stylesheet">
+  <style>
+    .premium-list-card {
+        background: #fafbfc;
+        border-left: 4px solid #1acc8d;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+        padding: 1.25rem 1.5rem !important;
+    }
+    .premium-list-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 28px rgba(26, 204, 141, 0.16) !important;
+        background: #fff;
+    }
+    /* 1. Misi Sekolah Overrides */
+    .premium-list-card .text-dark.leading-relaxed {
+        font-size: 15.5px !important;
+        font-weight: 500 !important;
+    }
+    .premium-list-card .bg-success.bg-opacity-10 {
+        min-width: 40px !important;
+        height: 40px !important;
+        background-color: rgba(26, 204, 141, 0.12) !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        box-shadow: 0 3px 8px rgba(26, 204, 141, 0.2);
+    }
+    .premium-list-card .bi-patch-check-fill {
+        font-size: 20px !important;
+        color: #1acc8d !important;
+    }
+    /* 2. 12 Quality Assurance Overrides */
+    .qa-number {
+        font-family: 'Poppins', sans-serif;
+        font-size: 13.5px !important;
+        font-weight: 700 !important;
+        color: #fff !important;
+        background: linear-gradient(135deg, #1acc8d, #0f9f6e) !important;
+        width: 36px !important;
+        height: 36px !important;
+        min-width: 36px !important;
+        max-width: 36px !important;
+        border-radius: 50% !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        opacity: 1 !important;
+        box-shadow: 0 3px 8px rgba(26, 204, 141, 0.25);
+    }
+    .premium-list-card .text-dark.fw-semibold {
+        font-size: 15.5px !important;
+        font-weight: 600 !important;
+        color: #1a2536 !important;
+        margin-left: 8px;
+    }
+    /* Spacing Row Gap */
+    .inner-page .row.g-3 {
+        row-gap: 1.5rem !important;
+    }
+    /* 3. Heading Section Decoratives */
+    .inner-page .section-title h2 {
+        color: #1acc8d !important;
+        font-weight: 600 !important;
+    }
+    .inner-page .section-title h2::after {
+        height: 3px !important;
+        background: linear-gradient(90deg, #1acc8d, #010483) !important;
+        width: 90px !important;
+        margin: 4px 12px !important;
+    }
+    .inner-page .section-title p {
+        position: relative;
+        padding-bottom: 12px;
+        display: inline-block;
+    }
+    .inner-page .section-title p::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 60px;
+        height: 4px;
+        background: linear-gradient(90deg, #1acc8d, #010483);
+        border-radius: 2px;
+    }
+  </style>
 </head>
 
 <body>
@@ -61,8 +147,8 @@ $is_home = false;
           <h2>Profil</h2>
           <p>Visi Sekolah</p>
         </div>
-        <p class="mb-5" style="color:#444; line-height:1.8; font-size:1.05rem;">
-          <?= $visi !== '' ? nl2br(htmlspecialchars($visi)) : '<em class="text-muted">[Visi belum diisi di pengaturan admin]</em>' ?>
+        <p class="mb-5 text-center" style="color:#444; line-height:1.8; font-size:1.15rem; font-weight:500; font-style:italic;">
+          " <?= $visi !== '' ? nl2br(htmlspecialchars($visi)) : '[Visi belum diisi di pengaturan admin]' ?> "
         </p>
 
         <div class="section-title">
@@ -72,85 +158,44 @@ $is_home = false;
         <?php if (empty($misi_lines)): ?>
           <p class="text-muted"><em>[Misi belum diisi di pengaturan admin]</em></p>
         <?php else: ?>
-          <ul class="profile-list mb-5">
+          <div class="row g-3 mb-5">
             <?php foreach ($misi_lines as $line): ?>
-              <li><i class="bi bi-check-circle-fill"></i> <span><?= htmlspecialchars($line) ?></span></li>
+              <div class="col-md-6">
+                <div class="card premium-list-card p-3 shadow-sm h-100 rounded-3 border-0 d-flex flex-row align-items-start">
+                  <div class="bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center me-3" style="min-width: 32px; height: 32px;">
+                    <i class="bi bi-patch-check-fill" style="font-size: 16px; color: #1acc8d;"></i>
+                  </div>
+                  <div class="text-dark leading-relaxed" style="font-size: 14.5px;"><?= htmlspecialchars($line) ?></div>
+                </div>
+              </div>
             <?php endforeach; ?>
-          </ul>
+          </div>
         <?php endif; ?>
 
-        <div class="section-title">
+        <div class="section-title pt-4">
           <h2>Profil</h2>
-          <p>Quality Assurance</p>
+          <p>12 Quality Assurance</p>
         </div>
         <?php if (empty($qa_lines)): ?>
           <p class="text-muted"><em>[QA list belum diisi di pengaturan admin]</em></p>
         <?php else: ?>
-          <ul class="profile-list">
-            <?php foreach ($qa_lines as $line): ?>
-              <li><i class="bi bi-check-circle-fill"></i> <span><?= htmlspecialchars($line) ?></span></li>
+          <div class="row g-3">
+            <?php foreach ($qa_lines as $index => $line): ?>
+              <div class="col-lg-4 col-md-6">
+                <div class="card premium-list-card p-3.5 shadow-sm h-100 rounded-3 border-0 d-flex flex-row align-items-center">
+                  <span class="qa-number me-2"><?= sprintf("%02d", $index + 1) ?></span>
+                  <div class="text-dark fw-semibold" style="font-size: 14px;"><?= htmlspecialchars($line) ?></div>
+                </div>
+              </div>
             <?php endforeach; ?>
-          </ul>
+          </div>
         <?php endif; ?>
 
       </div>
     </section>
   </main>
 
-  <footer id="footer">
-    <div class="footer-top">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-4 col-md-6">
-            <div class="footer-info">
-              <h3>SDIT AL FATAH</h3>
-              <p class="pb-3"><em>"Bersama Mencetak Generasi Islami yang Cerdas dan Berakhlak Mulia"</em></p>
-              <p>
-                Jl. Masjid Al-Muawanah No.60, RT.006/RW.012, Aren Jaya, Kec. Bekasi Tim., Kota Bks, Jawa Barat 17111 <br>
-                <br><br>
-                <strong>Phone:</strong> +62 0000 0000 0000<br>
-                <strong>Email:</strong> sditalfatah.60@gmail.com<br>
-              </p>
-              <?php include __DIR__ . '/includes/public_footer_social.php'; ?>
-            </div>
-          </div>
-          <div class="col-lg-2 col-md-6 footer-links">
-            <h4>Layanan Kepegawaian</h4>
-            <ul>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Administrasi Umum</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Surat Keluar Masuk</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Surat PPDB</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Administrasi Penilaian</a></li>
-            </ul>
-          </div>
-          <div class="col-lg-2 col-md-6 footer-links">
-            <h4>Tautan</h4>
-            <ul>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Profil Dapodik</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Periksa NISN</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">informasi KJP</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">PPDB</a></li>
-            </ul>
-          </div>
-          <div class="col-lg-4 col-md-6 footer-newsletter">
-            <h4>Our Newsletter</h4>
-            <p>Subscribe channel Youtube kami</p>
-            <form action="" method="post">
-              <input type="email" name="email"><input type="submit" value="Subscribe">
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="container">
-      <div class="copyright">
-        &copy; Copyright <strong><span style="color: #0fff63;">Sdit Al Fatah</span></strong>. All Rights Reserved
-      </div>
-      <div class="credits">
-        Designed by <Strong><span style="color: #00ff59;">Adriansyah</span></Strong>
-      </div>
-    </div>
-  </footer>
+  <?php include __DIR__ . '/includes/public_footer.php'; ?>
 
   <?php include __DIR__ . '/includes/public_wa_float.php'; ?>
   <div id="preloader"></div>

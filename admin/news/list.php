@@ -1,7 +1,7 @@
 <?php
 // admin/news/list.php
 require_once '../includes/auth.php';
-require_admin_role();
+// Memperbolehkan editor untuk melihat daftar berita (sebagai read-only)
 require_once '../config/db.php';
 
 try {
@@ -62,6 +62,11 @@ $error = $_GET['err'] ?? '';
                     <i class="fa-solid fa-circle-check me-2"></i> Berita berhasil dihapus!
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
+            <?php elseif ($message === 'approve_success'): ?>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fa-solid fa-circle-check me-2"></i> Berita berhasil disetujui dan diterbitkan!
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
             <?php endif; ?>
 
             <?php if (!empty($error)): ?>
@@ -117,10 +122,10 @@ $error = $_GET['err'] ?? '';
                                             </td>
                                             <td><code class="small text-secondary"><?= htmlspecialchars($news['slug']) ?></code></td>
                                             <td>
-                                                <?php if ($news['is_published'] == 1): ?>
+                                                <?php if ($news['status'] === 'published'): ?>
                                                     <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-1.5"><i class="fa-solid fa-circle-check me-1 small"></i> Terbit</span>
                                                 <?php else: ?>
-                                                    <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-pill px-3 py-1.5"><i class="fa-solid fa-circle-minus me-1 small"></i> Draf</span>
+                                                    <span class="badge bg-warning bg-opacity-10 text-warning rounded-pill px-3 py-1.5"><i class="fa-solid fa-clock me-1 small"></i> Pending Persetujuan</span>
                                                 <?php endif; ?>
                                             </td>
                                             <td class="text-secondary small">
@@ -128,15 +133,28 @@ $error = $_GET['err'] ?? '';
                                             </td>
                                             <td class="pe-4 text-center">
                                                 <div class="d-inline-flex gap-2">
-                                                    <a href="edit.php?id=<?= $news['id'] ?>" class="btn btn-sm btn-outline-primary" title="Edit Berita">
-                                                        <i class="fa-solid fa-pencil"></i>
-                                                    </a>
-                                                    <form action="delete.php" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus berita ini?')">
-                                                        <input type="hidden" name="id" value="<?= $news['id'] ?>">
-                                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Hapus Berita">
-                                                            <i class="fa-solid fa-trash-can"></i>
-                                                        </button>
-                                                    </form>
+                                                    <?php if ($news['status'] === 'pending' && (is_admin_role() || is_superadmin_role())): ?>
+                                                        <form action="approve.php" method="POST" class="d-inline">
+                                                            <input type="hidden" name="id" value="<?= $news['id'] ?>">
+                                                            <button type="submit" class="btn btn-sm btn-success text-white" title="Setujui & Terbitkan">
+                                                                <i class="fa-solid fa-circle-check me-1"></i> Terbitkan
+                                                            </button>
+                                                        </form>
+                                                    <?php endif; ?>
+
+                                                    <?php if (is_admin_role() || is_superadmin_role()): ?>
+                                                        <a href="edit.php?id=<?= $news['id'] ?>" class="btn btn-sm btn-outline-primary" title="Edit Berita">
+                                                            <i class="fa-solid fa-pencil"></i>
+                                                        </a>
+                                                        <form action="delete.php" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus berita ini?')">
+                                                            <input type="hidden" name="id" value="<?= $news['id'] ?>">
+                                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Hapus Berita">
+                                                                <i class="fa-solid fa-trash-can"></i>
+                                                            </button>
+                                                        </form>
+                                                    <?php else: ?>
+                                                        <span class="text-muted small">—</span>
+                                                    <?php endif; ?>
                                                 </div>
                                             </td>
                                         </tr>

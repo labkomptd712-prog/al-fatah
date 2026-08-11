@@ -1,41 +1,31 @@
 <?php
-  /**
-  * Requires the "PHP Email Form" library
-  * The "PHP Email Form" library is available only in the pro version of the template
-  * The library should be uploaded to: vendor/php-email-form/php-email-form.php
-  * For more info and help: https://bootstrapmade.com/php-email-form/
-  */
+// forms/contact.php
+// Penanganan Form Kontak - Opsi 1: Menyimpan ke Database
 
-  // email
-  $receiving_email_address = 'driannime144@gmail.com';
+require_once '../admin/config/db.php';
 
-  if( file_exists($php_email_form = '../assets/vendor/php-email-form/php-email-form.php' )) {
-    include( $php_email_form );
-  } else {
-    die( 'Unable to load the "PHP Email Form" Library!');
-  }
+$name = trim($_POST['name'] ?? '');
+$email = trim($_POST['email'] ?? '');
+$subject = trim($_POST['subject'] ?? '');
+$message = trim($_POST['message'] ?? '');
 
- // $contact = new PHP_Email_Form;
-  //$contact->ajax = true;
-  
-  //$contact->to = $receiving_email_address;
- // $contact->from_name = $_POST['name'];
- // $contact->from_email = $_POST['email'];
- // $contact->subject = $_POST['subject'];
+if ($name === '' || $email === '' || $subject === '' || $message === '') {
+    echo "Semua kolom input formulir wajib diisi!";
+    exit();
+}
 
-  // Uncomment below code if you want to use SMTP to send emails. You need to enter your correct SMTP credentials
-  /*
-  $contact->smtp = array(
-    'host' => 'example.com',
-    'username' => 'example',
-    'password' => 'pass',
-    'port' => '587'
-  );
-  */
+if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    echo "Alamat email tidak valid!";
+    exit();
+}
 
-  $contact->add_message( $_POST['name'], 'From');
-  $contact->add_message( $_POST['email'], 'Email');
-  $contact->add_message( $_POST['message'], 'Message', 10);
-
-  echo $contact->send();
+try {
+    $stmt = $pdo->prepare("INSERT INTO contact_messages (name, email, subject, message) VALUES (?, ?, ?, ?)");
+    $stmt->execute([$name, $email, $subject, $message]);
+    
+    // Kembalikan teks "OK" agar dibaca sukses oleh library JS validate.js di frontend
+    echo "OK";
+} catch (PDOException $e) {
+    echo "Gagal menyimpan pesan: " . $e->getMessage();
+}
 ?>

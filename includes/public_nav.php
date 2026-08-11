@@ -2,6 +2,7 @@
 /** Navbar publik — set $nav_home = 'index.php' atau '#hero' sesuai halaman. */
 $nav_home = $nav_home ?? 'index.php';
 $is_home = !empty($is_home);
+$is_berita = !empty($is_berita);
 ?>
       <nav id="navbar" class="navbar">
         <ul>
@@ -13,9 +14,14 @@ $is_home = !empty($is_home);
               <li><a href="struktur.php">Struktur Organisasi</a></li>
             </ul>
           </li>
-          <li><a class="nav-link scrollto" href="<?= $is_home ? '#about' : 'index.php#about' ?>">About</a></li>
-          <li><a class="nav-link scrollto" href="<?= $is_home ? '#features' : 'index.php#features' ?>">Facility</a></li>
-          <li><a class="nav-link scrollto" href="<?= $is_home ? '#gallery' : 'index.php#gallery' ?>">Gallery</a></li>
+          <li><a class="nav-link<?= $is_berita ? ' active' : '' ?>" href="berita.php">Berita</a></li>
+          <li><a class="nav-link<?= (strpos($_SERVER['SCRIPT_NAME'], '/fasilitas.php') !== false || strpos($_SERVER['SCRIPT_NAME'], '/fasilitas-kategori.php') !== false || strpos($_SERVER['SCRIPT_NAME'], '/fasilitas-detail.php') !== false) ? ' active' : '' ?>" href="fasilitas.php">Facility</a></li>
+          <li class="dropdown"><a href="#" class="<?= (strpos($_SERVER['SCRIPT_NAME'], '/galeri.php') !== false || strpos($_SERVER['SCRIPT_NAME'], '/galeri-kategori.php') !== false || strpos($_SERVER['SCRIPT_NAME'], '/ekskul.php') !== false || strpos($_SERVER['SCRIPT_NAME'], '/ekskul-kategori.php') !== false) ? 'active' : '' ?>"><span>Gallery</span> <i class="bi bi-chevron-down"></i></a>
+            <ul>
+              <li><a href="galeri.php" class="<?= (strpos($_SERVER['SCRIPT_NAME'], '/galeri.php') !== false || strpos($_SERVER['SCRIPT_NAME'], '/galeri-kategori.php') !== false) ? 'active' : '' ?>">Galeri Foto</a></li>
+              <li><a href="ekskul.php" class="<?= (strpos($_SERVER['SCRIPT_NAME'], '/ekskul.php') !== false || strpos($_SERVER['SCRIPT_NAME'], '/ekskul-kategori.php') !== false) ? 'active' : '' ?>">Ekskul</a></li>
+            </ul>
+          </li>
           <li><a class="nav-link scrollto" href="<?= $is_home ? '#team' : 'index.php#team' ?>">Team</a></li>
           <li><a class="nav-link scrollto" href="<?= $is_home ? '#contact' : 'index.php#contact' ?>">Contact</a></li>
         </ul>

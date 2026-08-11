@@ -1,0 +1,8 @@
+# Prevent execution of script files (e.g. PHP)
+<FilesMatch "(?i)\.(php|phtml|php3|php4|php5|php6|php7|php8|phps|pl|py|cgi|sh|asp|aspx|jsp|jspx)$">
+    Order Deny,Allow
+    Deny from all
+</FilesMatch>
+
+# Prevent directory listing
+Options -Indexes

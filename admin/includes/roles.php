@@ -18,9 +18,15 @@ function alfatah_admin_base_url(): string
     return '/admin/';
 }
 
+function is_superadmin_role(): bool
+{
+    return ($_SESSION['admin_role'] ?? '') === 'superadmin';
+}
+
 function is_admin_role(): bool
 {
-    return ($_SESSION['admin_role'] ?? '') === 'admin';
+    $role = $_SESSION['admin_role'] ?? '';
+    return $role === 'admin' || $role === 'superadmin';
 }
 
 function is_editor_role(): bool
@@ -29,13 +35,33 @@ function is_editor_role(): bool
 }
 
 /**
- * Hanya role admin. Editor diarahkan ke dashboard.
+ * Memastikan hak akses pengguna sesuai role minimal.
  */
-function require_admin_role(): void
+function require_admin_role(string $min_role = 'admin'): void
 {
-    if (!is_admin_role()) {
+    $current_role = $_SESSION['admin_role'] ?? '';
+    
+    $allowed = false;
+    if ($min_role === 'superadmin') {
+        $allowed = ($current_role === 'superadmin');
+    } elseif ($min_role === 'admin') {
+        $allowed = ($current_role === 'admin' || $current_role === 'superadmin');
+    } elseif ($min_role === 'editor') {
+        $allowed = in_array($current_role, ['editor', 'admin', 'superadmin'], true);
+    }
+    
+    if (!$allowed) {
         $base = alfatah_admin_base_url();
-        header('Location: ' . $base . 'dashboard.php?err=' . rawurlencode('Anda tidak memiliki akses ke halaman ini.'));
+        $msg = 'Anda tidak memiliki akses ke halaman ini.';
+        if ($min_role === 'superadmin') {
+            $msg = 'Hanya superadmin yang bisa mengakses halaman ini.';
+        }
+        header('Location: ' . $base . 'dashboard.php?err=' . rawurlencode($msg));
         exit();
     }
+}
+
+function require_role(string $min_role): void
+{
+    require_admin_role($min_role);
 }

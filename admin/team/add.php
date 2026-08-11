@@ -1,6 +1,7 @@
 <?php
 // admin/team/add.php
 require_once '../includes/auth.php';
+require_role('admin'); // Membatasi editor dari menambah data team
 require_once '../config/db.php';
 
 $error = '';

@@ -56,6 +56,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Admin - SDIT Al Fatah</title>
+    <link href="../assets/img/logo afix.png" rel="icon">
+    <link href="../assets/img/logo afix.png" rel="apple-touch-icon">
     <!-- Bootstrap 5 CSS -->
     <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
@@ -102,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="login-card">
         <div class="brand-logo">
             <img src="../assets/img/logo afix.png" alt="Logo SDIT Al Fatah">
-            <h4 class="mt-3 fw-bold text-dark">SDIT Al Fatah</h4>
+            <h4 class="mt-3 fw-bold text-dark"><span class="brand-font">SDIT Al Fatah</span></h4>
             <span class="text-muted small">Silakan login untuk masuk ke admin panel</span>
         </div>
 

@@ -8,12 +8,17 @@ $expected_keys = [
     'visi', 
     'misi', 
     'qa_list', 
+    'phone_number',
     'wa_number', 
     'wa_message', 
     'ig_link', 
     'fb_link', 
     'yt_link', 
-    'tiktok_link'
+    'tiktok_link',
+    'stats_siswa',
+    'stats_guru',
+    'stats_tendik',
+    'stats_sarpras'
 ];
 
 $error = '';
@@ -53,8 +58,18 @@ try {
     
     // Ensure all expected keys exist in the array to prevent PHP undefined index warnings
     foreach ($expected_keys as $key) {
-        if (!isset($settings[$key])) {
-            $settings[$key] = '';
+        if (!isset($settings[$key]) || $settings[$key] === '') {
+            if ($key === 'stats_siswa') {
+                $settings[$key] = '605';
+            } elseif ($key === 'stats_guru') {
+                $settings[$key] = '33';
+            } elseif ($key === 'stats_tendik') {
+                $settings[$key] = '3';
+            } elseif ($key === 'stats_sarpras') {
+                $settings[$key] = '24';
+            } else {
+                $settings[$key] = '';
+            }
         }
     }
 } catch (PDOException $e) {
@@ -124,7 +139,7 @@ try {
                             </div>
 
                             <div class="mb-0">
-                                <label for="qa_list" class="form-label fw-semibold text-secondary">Quality Assurance (Jaminan Mutu)</label>
+                                <label for="qa_list" class="form-label fw-semibold text-secondary">12 Quality Assurance (Jaminan Mutu)</label>
                                 <textarea class="form-control bg-light border-0 p-3 rounded-3" id="qa_list" name="qa_list" rows="6" placeholder="Masukkan jaminan mutu lulusan (tulis satu per baris)..." required><?= htmlspecialchars($settings['qa_list']) ?></textarea>
                                 <small class="text-muted">Tuliskan setiap butir jaminan mutu pada <strong>baris baru</strong>.</small>
                             </div>
@@ -134,23 +149,57 @@ try {
                     <!-- Right Column: Contacts and Social Links -->
                     <div class="col-lg-5">
                         <div class="d-flex flex-column gap-4">
-                            <!-- WhatsApp Contacts -->
+                            <!-- Kontak & WhatsApp -->
                             <div class="card border-0 rounded-4 shadow-sm p-4">
-                                <h5 class="fw-bold text-dark mb-3"><i class="fa-brands fa-whatsapp text-success me-2"></i> Kontak WhatsApp</h5>
+                                <h5 class="fw-bold text-dark mb-3"><i class="fa-solid fa-phone text-success me-2"></i> Kontak Sekolah</h5>
                                 <hr class="mt-0 mb-3 border-light">
 
                                 <div class="mb-3">
-                                    <label for="wa_number" class="form-label fw-semibold text-secondary">Nomor WhatsApp</label>
+                                    <label for="phone_number" class="form-label fw-semibold text-secondary">Nomor Telepon (Footer)</label>
                                     <div class="input-group">
                                         <span class="input-group-text bg-light border-0 text-muted"><i class="fa-solid fa-phone"></i></span>
+                                        <input type="text" class="form-control bg-light border-0 py-2.5 rounded-end-3" id="phone_number" name="phone_number" value="<?= htmlspecialchars($settings['phone_number']) ?>" placeholder="Contoh: 6282122229862" required>
+                                    </div>
+                                    <small class="text-muted">Digunakan untuk tampilan teks kontak di footer halaman publik.</small>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="wa_number" class="form-label fw-semibold text-secondary">Nomor WhatsApp (Tombol Floating)</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-0 text-muted"><i class="fa-brands fa-whatsapp text-success"></i></span>
                                         <input type="text" class="form-control bg-light border-0 py-2.5 rounded-end-3" id="wa_number" name="wa_number" value="<?= htmlspecialchars($settings['wa_number']) ?>" placeholder="Contoh: 628123456789" required>
                                     </div>
-                                    <small class="text-muted">Gunakan kode negara di awal (misal: <strong>62</strong>812...). Jangan pakai spasi/tanda hubung.</small>
+                                    <small class="text-muted">Gunakan kode negara di awal (misal: <strong>62</strong>812...). Tanpa spasi/tanda hubung.</small>
                                 </div>
 
                                 <div class="mb-0">
-                                    <label for="wa_message" class="form-label fw-semibold text-secondary">Template Pesan Chat</label>
+                                    <label for="wa_message" class="form-label fw-semibold text-secondary">Template Pesan Chat WhatsApp</label>
                                     <textarea class="form-control bg-light border-0 p-3 rounded-3" id="wa_message" name="wa_message" rows="2" placeholder="Pesan otomatis ketika calon wali murid mengklik link WA..."><?= htmlspecialchars($settings['wa_message']) ?></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Statistik Sekolah -->
+                            <div class="card border-0 rounded-4 shadow-sm p-4">
+                                <h5 class="fw-bold text-dark mb-3"><i class="fa-solid fa-chart-simple text-success me-2"></i> Statistik Sekolah</h5>
+                                <hr class="mt-0 mb-3 border-light">
+
+                                <div class="row g-2">
+                                    <div class="col-6 mb-3">
+                                        <label for="stats_siswa" class="form-label fw-semibold text-secondary">Peserta Didik</label>
+                                        <input type="number" class="form-control bg-light border-0 py-2 rounded-3 text-secondary" id="stats_siswa" name="stats_siswa" value="<?= htmlspecialchars($settings['stats_siswa']) ?>" required min="0">
+                                    </div>
+                                    <div class="col-6 mb-3">
+                                        <label for="stats_guru" class="form-label fw-semibold text-secondary">Pendidik (Guru)</label>
+                                        <input type="number" class="form-control bg-light border-0 py-2 rounded-3 text-secondary" id="stats_guru" name="stats_guru" value="<?= htmlspecialchars($settings['stats_guru']) ?>" required min="0">
+                                    </div>
+                                    <div class="col-6 mb-0">
+                                        <label for="stats_tendik" class="form-label fw-semibold text-secondary">Tendik (Staf)</label>
+                                        <input type="number" class="form-control bg-light border-0 py-2 rounded-3 text-secondary" id="stats_tendik" name="stats_tendik" value="<?= htmlspecialchars($settings['stats_tendik']) ?>" required min="0">
+                                    </div>
+                                    <div class="col-6 mb-0">
+                                        <label for="stats_sarpras" class="form-label fw-semibold text-secondary">Ruang Sarpras</label>
+                                        <input type="number" class="form-control bg-light border-0 py-2 rounded-3 text-secondary" id="stats_sarpras" name="stats_sarpras" value="<?= htmlspecialchars($settings['stats_sarpras']) ?>" required min="0">
+                                    </div>
                                 </div>
                             </div>
 

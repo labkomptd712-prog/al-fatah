@@ -65,60 +65,7 @@ $is_home = false;
     </section>
   </main>
 
-  <footer id="footer">
-    <div class="footer-top">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-4 col-md-6">
-            <div class="footer-info">
-              <h3>SDIT AL FATAH</h3>
-              <p class="pb-3"><em>"Bersama Mencetak Generasi Islami yang Cerdas dan Berakhlak Mulia"</em></p>
-              <p>
-                Jl. Masjid Al-Muawanah No.60, RT.006/RW.012, Aren Jaya, Kec. Bekasi Tim., Kota Bks, Jawa Barat 17111 <br>
-                <br><br>
-                <strong>Phone:</strong> +62 0000 0000 0000<br>
-                <strong>Email:</strong> sditalfatah.60@gmail.com<br>
-              </p>
-              <?php include __DIR__ . '/includes/public_footer_social.php'; ?>
-            </div>
-          </div>
-          <div class="col-lg-2 col-md-6 footer-links">
-            <h4>Layanan Kepegawaian</h4>
-            <ul>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Administrasi Umum</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Surat Keluar Masuk</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Surat PPDB</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Administrasi Penilaian</a></li>
-            </ul>
-          </div>
-          <div class="col-lg-2 col-md-6 footer-links">
-            <h4>Tautan</h4>
-            <ul>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Profil Dapodik</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Periksa NISN</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">informasi KJP</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">PPDB</a></li>
-            </ul>
-          </div>
-          <div class="col-lg-4 col-md-6 footer-newsletter">
-            <h4>Our Newsletter</h4>
-            <p>Subscribe channel Youtube kami</p>
-            <form action="" method="post">
-              <input type="email" name="email"><input type="submit" value="Subscribe">
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="container">
-      <div class="copyright">
-        &copy; Copyright <strong><span style="color: #0fff63;">Sdit Al Fatah</span></strong>. All Rights Reserved
-      </div>
-      <div class="credits">
-        Designed by <Strong><span style="color: #00ff59;">Adriansyah</span></Strong>
-      </div>
-    </div>
-  </footer>
+  <?php include __DIR__ . '/includes/public_footer.php'; ?>
 
   <?php include __DIR__ . '/includes/public_wa_float.php'; ?>
   <div id="preloader"></div>

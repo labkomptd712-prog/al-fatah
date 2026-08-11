@@ -3,18 +3,29 @@ require_once __DIR__ . '/includes/public_init.php';
 
 $gallery_items = [];
 try {
-    $stmt = $pdo->query("SELECT id, caption, image FROM gallery ORDER BY created_at DESC");
-    $gallery_items = $stmt->fetchAll();
+    // Ambil ID kategori umum
+    $stmtUmum = $pdo->query("SELECT id FROM gallery_categories WHERE slug = 'umum'");
+    $umum_id = $stmtUmum->fetchColumn();
+    
+    if ($umum_id) {
+        $stmt = $pdo->prepare("SELECT id, caption, image FROM gallery WHERE category_id = ? ORDER BY created_at DESC");
+        $stmt->execute([$umum_id]);
+        $gallery_items = $stmt->fetchAll();
+    } else {
+        // Fallback jika kategori umum tidak ditemukan
+        $stmt = $pdo->query("SELECT id, caption, image FROM gallery ORDER BY created_at DESC");
+        $gallery_items = $stmt->fetchAll();
+    }
 } catch (PDOException $e) {
     $gallery_items = [];
 }
 
-$news_items = [];
+$team_members = [];
 try {
-    $stmt = $pdo->query("SELECT title, slug, image, created_at FROM news WHERE is_published = 1 ORDER BY created_at DESC LIMIT 3");
-    $news_items = $stmt->fetchAll();
+    $stmt = $pdo->query("SELECT name, position, photo FROM team ORDER BY display_order ASC, id ASC");
+    $team_members = $stmt->fetchAll();
 } catch (PDOException $e) {
-    $news_items = [];
+    $team_members = [];
 }
 
 $is_home = true;
@@ -89,7 +100,7 @@ $is_home = true;
           <h1>Selamat Datang Di Website <span>SDIT AL FATAH </span></h1>
             <h2>Menghadirkan kemudahan akses informasi yang cepat dan tepat, untuk dunia pendidikan yang lebih baik</h2>
             <div class="text-center text-lg-start">
-              <a href="#about" class="btn-get-started scrollto">Profil Sekolah</a>
+              <a href="profil-sekolah.php" class="btn-get-started">Profil Sekolah</a>
             </div>
           </div>
         </div>
@@ -165,79 +176,67 @@ $is_home = true;
           <p>Fasilitas</p>
         </div>
 
+        <?php
+        try {
+            $stmtFac = $pdo->query("SELECT * FROM facilities ORDER BY display_order ASC, name ASC");
+            $facilities_list = $stmtFac->fetchAll();
+        } catch (PDOException $e) {
+            $facilities_list = [];
+        }
+
+        $icon_map = [
+            'lapangan' => ['icon' => 'bx bx-map-pin', 'color' => '#ff5828'],
+            'lab ptd' => ['icon' => 'ri-bar-chart-box-line', 'color' => '#5578ff'],
+            'komputer' => ['icon' => 'bx bx-desktop', 'color' => 'rgb(18, 123, 152)'],
+            'masjid' => ['icon' => 'bx bx-home', 'color' => 'rgb(47, 134, 6)'],
+            'wc' => ['icon' => 'bx bx-male-female', 'color' => 'rgb(183, 84, 245)'],
+            'flying' => ['icon' => 'bx bxs-cable-car', 'color' => 'rgb(0, 87, 200)'],
+            'ac' => ['icon' => 'bx bx-wind', 'color' => '#24c3d5'],
+            'kantin' => ['icon' => 'bx bxs-store', 'color' => '#ff5828'],
+            'belajar' => ['icon' => 'bx bxs-layer', 'color' => '#85b20a'],
+            'perpustakaan' => ['icon' => 'bx bxs-book-bookmark', 'color' => '#089b79'],
+            'hotspot' => ['icon' => 'ri-base-station-line', 'color' => '#ff5828'],
+            'taman' => ['icon' => 'bx bxs-tree', 'color' => '#29cc61'],
+        ];
+        ?>
         <div class="row" data-aos="fade-left">
-          <div class="col-lg-3 col-md-4">
-            <div class="icon-box" data-aos="zoom-in" data-aos-delay="50">
-              <i class='bx bx-map-pin' style="color: #ff5828;" ></i>
-              <h3><a href="">Lapangan luas</a></h3>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-4 mt-4 mt-md-0">
-            <div class="icon-box" data-aos="zoom-in" data-aos-delay="100">
-              <i class="ri-bar-chart-box-line" style="color: #5578ff;"></i>
-              <h3><a href="">lab PTD</a></h3>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-4 mt-4 mt-md-0">
-            <div class="icon-box" data-aos="zoom-in" data-aos-delay="150">
-              <i class='bx bx-desktop' style="color: rgb(18, 123, 152);"></i>
-              <h3><a href="">Lab Komputer</a></h3>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-4 mt-4 mt-lg-0">
-            <div class="icon-box" data-aos="zoom-in" data-aos-delay="200">
-              <i class='bx bx-home' style="color: rgb(47, 134, 6);"></i>
-              <h3><a href="">Masjid</a></h3>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-4 mt-4">
-            <div class="icon-box" data-aos="zoom-in" data-aos-delay="250">
-              <i class='bx bx-male-female' style="color: rgb(183, 84, 245);"></i>
-              <h3><a href="">WC</a></h3>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-4 mt-4">
-            <div class="icon-box" data-aos="zoom-in" data-aos-delay="300">
-              <i class='bx bxs-cable-car' style="color: rgb(0, 87, 200);"></i>
-              <h3><a href="">flying fox</a></h3>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-4 mt-4">
-            <div class="icon-box" data-aos="zoom-in" data-aos-delay="350">
-              <i class='bx bx-wind' style="color: #24c3d5;"></i> 
-              <h3><a href="">Ruangan Kelas Full AC</a></h3>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-4 mt-4">
-            <div class="icon-box" data-aos="zoom-in" data-aos-delay="400">
-              <i class='bx bxs-store' style="color: #ff5828;"></i>
-              <h3><a href="">Kantin</a></h3>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-4 mt-4">
-            <div class="icon-box" data-aos="zoom-in" data-aos-delay="450">
-              <i class='bx bxs-layer' style="color: #85b20a;"></i>
-              <h3><a href="">Area Belajar</a></h3>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-4 mt-4">
-            <div class="icon-box" data-aos="zoom-in" data-aos-delay="500">
-              <i class='bx bxs-book-bookmark' style="color: #089b79;"></i>
-              <h3><a href="">perpustakaan</a></h3>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-4 mt-4">
-            <div class="icon-box" data-aos="zoom-in" data-aos-delay="550">
-              <i class="ri-base-station-line" style="color: #ff5828;"></i>
-              <h3><a href="">Hotspot area</a></h3>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-4 mt-4">
-            <div class="icon-box" data-aos="zoom-in" data-aos-delay="600">
-              <i class='bx bxs-tree' style="color: #29cc61;"></i>
-              <h3><a href="">Taman</a></h3>
-            </div>
-          </div>
+          <?php if (empty($facilities_list)): ?>
+            <div class="col-12 text-center py-4 text-muted">Belum ada data fasilitas.</div>
+          <?php else: ?>
+            <?php 
+            $delay = 50; 
+            foreach ($facilities_list as $index => $fac): 
+                $lower_name = strtolower($fac['name']);
+                $icon_class = 'bx bx-check-circle';
+                $icon_color = '#1acc8d';
+                
+                foreach ($icon_map as $key => $val) {
+                    if (strpos($lower_name, $key) !== false) {
+                        $icon_class = $val['icon'];
+                        $icon_color = $val['color'];
+                        break;
+                    }
+                }
+                
+                $mt_class = ' mt-4';
+                if ($index < 3) {
+                    $mt_class .= ' mt-md-0';
+                }
+                if ($index < 4) {
+                    $mt_class .= ' mt-lg-0';
+                }
+            ?>
+              <div class="col-lg-3 col-md-4<?= $mt_class ?>">
+                <div class="icon-box" data-aos="zoom-in" data-aos-delay="<?= $delay ?>">
+                  <i class='<?= $icon_class ?>' style="color: <?= $icon_color ?>;" ></i>
+                  <h3><a href="fasilitas.php"><?= htmlspecialchars($fac['name']) ?></a></h3>
+                </div>
+              </div>
+            <?php 
+              $delay += 50;
+            endforeach; 
+            ?>
+          <?php endif; ?>
         </div>
 
       </div>
@@ -247,12 +246,17 @@ $is_home = true;
     <section id="counts" class="counts">
       <div class="container">
 
+        <div class="section-title" data-aos="fade-up">
+          <h2>Statistik Sekolah</h2>
+          <p>Informasi Data SDIT Al Fatah</p>
+        </div>
+
         <div class="row" data-aos="fade-up">
 
           <div class="col-lg-3 col-md-6">
             <div class="count-box">
               <i class='bx bx-user-circle'></i>
-              <span data-purecounter-start="0" data-purecounter-end="605" data-purecounter-duration="1" class="purecounter"></span>
+              <span data-purecounter-start="0" data-purecounter-end="<?= htmlspecialchars($settings['stats_siswa']) ?>" data-purecounter-duration="1" class="purecounter"></span>
               <p>Peserta Didik</p>
             </div>
           </div>
@@ -260,7 +264,7 @@ $is_home = true;
           <div class="col-lg-3 col-md-6 mt-5 mt-md-0">
             <div class="count-box">
               <i class="bi bi-journal-richtext"></i>
-              <span data-purecounter-start="0" data-purecounter-end="33" data-purecounter-duration="1" class="purecounter"></span>
+              <span data-purecounter-start="0" data-purecounter-end="<?= htmlspecialchars($settings['stats_guru']) ?>" data-purecounter-duration="1" class="purecounter"></span>
               <p>Pendidik</p>
             </div>
           </div>
@@ -268,7 +272,7 @@ $is_home = true;
           <div class="col-lg-3 col-md-6 mt-5 mt-lg-0">
             <div class="count-box">
               <i class="bi bi-headset"></i>
-              <span data-purecounter-start="0" data-purecounter-end="3" data-purecounter-duration="1" class="purecounter"></span>
+              <span data-purecounter-start="0" data-purecounter-end="<?= htmlspecialchars($settings['stats_tendik']) ?>" data-purecounter-duration="1" class="purecounter"></span>
               <p>Tendik</p>
             </div>
           </div>
@@ -276,7 +280,7 @@ $is_home = true;
           <div class="col-lg-3 col-md-6 mt-5 mt-lg-0">
             <div class="count-box">
               <i class="bi bi-people"></i>
-              <span data-purecounter-start="0" data-purecounter-end="24" data-purecounter-duration="1" class="purecounter"></span>
+              <span data-purecounter-start="0" data-purecounter-end="<?= htmlspecialchars($settings['stats_sarpras']) ?>" data-purecounter-duration="1" class="purecounter"></span>
               <p>Ruang Sarpras</p>
             </div>
           </div>
@@ -374,49 +378,6 @@ SDIT Al Fatah dengan bangga mempersembahkan berbagai kegiatan outdoor yang diran
       </div>
     </section><!-- End Details Section -->
 
-    <!-- ======= News Section ======= -->
-    <section id="news" class="news">
-      <div class="container">
-
-        <div class="section-title" data-aos="fade-up">
-          <h2>Berita</h2>
-          <p>Berita Terbaru</p>
-        </div>
-
-        <div class="row gy-4" data-aos="fade-up" data-aos-delay="100">
-          <?php if (empty($news_items)): ?>
-          <div class="col-12 text-center py-4">
-            <p class="text-muted mb-0">Belum ada berita dipublikasikan.</p>
-          </div>
-          <?php else: ?>
-          <?php
-          $news_delay = 100;
-          foreach ($news_items as $item):
-            $has_image = !empty($item['image']);
-            $img_src = $has_image ? ('admin/uploads/' . $item['image']) : 'assets/img/logo afix.png';
-            $href = 'inner-page.php?slug=' . urlencode($item['slug']);
-          ?>
-          <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="<?= (int) $news_delay ?>">
-            <a href="<?= htmlspecialchars($href) ?>" class="news-item">
-              <div class="news-img">
-                <img src="<?= htmlspecialchars($img_src) ?>" alt="<?= htmlspecialchars($item['title']) ?>">
-              </div>
-              <div class="news-info">
-                <h4><?= htmlspecialchars($item['title']) ?></h4>
-                <span class="news-date"><?= date('d F Y', strtotime($item['created_at'])) ?></span>
-              </div>
-            </a>
-          </div>
-          <?php
-            $news_delay += 100;
-          endforeach;
-          ?>
-          <?php endif; ?>
-        </div>
-
-      </div>
-    </section><!-- End News Section -->
-
     <!-- ======= Gallery Section ======= -->
     <section id="gallery" class="gallery">
       <div class="container">
@@ -429,7 +390,7 @@ SDIT Al Fatah dengan bangga mempersembahkan berbagai kegiatan outdoor yang diran
         <div class="row g-0" data-aos="fade-left">
           <?php if (empty($gallery_items)): ?>
           <div class="col-12 text-center py-4">
-            <p class="text-muted mb-0">Belum ada foto galeri.</p>
+            <p class="text-muted mb-0">Belum ada foto di kategori Umum.</p>
           </div>
           <?php else: ?>
           <?php
@@ -457,78 +418,115 @@ SDIT Al Fatah dengan bangga mempersembahkan berbagai kegiatan outdoor yang diran
       </div>
     </section><!-- End Gallery Section -->
 
+    <!-- ======= Testimonials Title Section ======= -->
+    <section id="testimonials-title" class="testimonials-title" style="padding: 60px 0 0 0; background: #fff;">
+      <div class="container">
+        <div class="section-title" data-aos="fade-up" style="padding-bottom: 0;">
+          <h2>Testimoni Alumni</h2>
+          <p>Kesan & Pesan Alumni Sekolah</p>
+        </div>
+      </div>
+    </section>
+
     <!-- ======= Testimonials Section ======= -->
-    <section id="testimonials" class="testimonials">
+    <section id="testimonials" class="testimonials" style="padding: 40px 0 60px 0;">
       <div class="container">
 
         <div class="testimonials-slider swiper" data-aos="fade-up" data-aos-delay="100">
           <div class="swiper-wrapper">
+            <?php
+            try {
+                $stmtTestimonials = $pdo->query("SELECT * FROM testimonials ORDER BY display_order ASC, id ASC");
+                $db_testimonials = $stmtTestimonials->fetchAll();
+            } catch (PDOException $e) {
+                $db_testimonials = [];
+            }
+            
+            if (!empty($db_testimonials)):
+                foreach ($db_testimonials as $t):
+                    $photo_url = !empty($t['photo']) ? 'admin/uploads/' . $t['photo'] : 'assets/img/testimonials/testimonials-1.jpg';
+            ?>
+                <div class="swiper-slide">
+                  <div class="testimonial-item">
+                    <img src="<?= htmlspecialchars($photo_url) ?>" class="testimonial-img" alt="">
+                    <h3><?= htmlspecialchars($t['name']) ?></h3>
+                    <h4><?= htmlspecialchars($t['position']) ?></h4>
+                    <p>
+                      <i class="bx bxs-quote-alt-left quote-icon-left"></i>
+                      <?= htmlspecialchars($t['quote']) ?>
+                      <i class="bx bxs-quote-alt-right quote-icon-right"></i>
+                    </p>
+                  </div>
+                </div>
+            <?php 
+                endforeach;
+            else:
+            ?>
+                <div class="swiper-slide">
+                  <div class="testimonial-item">
+                    <img src="assets/img/testimonials/testimonials-1.jpg" class="testimonial-img" alt="">
+                    <h3>irfan hp</h3>
+                    <h4>admin&amp; user</h4>
+                    <p>
+                      <i class="bx bxs-quote-alt-left quote-icon-left"></i>
+                      Setiap anak adalah permata yang berharga, bersinar terang dengan bimbingan yang tepat.
+                      <i class="bx bxs-quote-alt-right quote-icon-right"></i>
+                    </p>
+                  </div>
+                </div><!-- End testimonial item -->
 
-            <div class="swiper-slide">
-              <div class="testimonial-item">
-                <img src="assets/img/testimonials/testimonials-1.jpg" class="testimonial-img" alt="">
-                <h3>irfan hp</h3>
-                <h4>admin&amp; user</h4>
-                <p>
-                  <i class="bx bxs-quote-alt-left quote-icon-left"></i>
-                  Setiap anak adalah permata yang berharga, bersinar terang dengan bimbingan yang tepat.
-                  <i class="bx bxs-quote-alt-right quote-icon-right"></i>
-                </p>
-              </div>
-            </div><!-- End testimonial item -->
+                <div class="swiper-slide">
+                  <div class="testimonial-item">
+                    <img src="assets/img/testimonials/testimonials-2.jpg" class="testimonial-img" alt="">
+                    <h3>irfan cv</h3>
+                    <h4>Designer</h4>
+                    <p>
+                      <i class="bx bxs-quote-alt-left quote-icon-left"></i>
+                      Dengan ilmu kita terangi dunia, dengan iman kita kuatkan jiwa
+                      <i class="bx bxs-quote-alt-right quote-icon-right"></i>
+                    </p>
+                  </div>
+                </div><!-- End testimonial item -->
 
-            <div class="swiper-slide">
-              <div class="testimonial-item">
-                <img src="assets/img/testimonials/testimonials-2.jpg" class="testimonial-img" alt="">
-                <h3>irfan cv</h3>
-                <h4>Designer</h4>
-                <p>
-                  <i class="bx bxs-quote-alt-left quote-icon-left"></i>
-                  Dengan ilmu kita terangi dunia, dengan iman kita kuatkan jiwa
-                  <i class="bx bxs-quote-alt-right quote-icon-right"></i>
-                </p>
-              </div>
-            </div><!-- End testimonial item -->
+                <div class="swiper-slide">
+                  <div class="testimonial-item">
+                    <img src="assets/img/testimonials/testimonials-3.jpg" class="testimonial-img" alt="">
+                    <h3>irfan jpg</h3>
+                    <h4>guru</h4>
+                    <p>
+                      <i class="bx bxs-quote-alt-left quote-icon-left"></i>
+                      Menanam benih pengetahuan, memanen generasi emas
+                      <i class="bx bxs-quote-alt-right quote-icon-right"></i>
+                    </p>
+                  </div>
+                </div><!-- End testimonial item -->
 
-            <div class="swiper-slide">
-              <div class="testimonial-item">
-                <img src="assets/img/testimonials/testimonials-3.jpg" class="testimonial-img" alt="">
-                <h3>irfan jpg</h3>
-                <h4>guru</h4>
-                <p>
-                  <i class="bx bxs-quote-alt-left quote-icon-left"></i>
-                  Menanam benih pengetahuan, memanen generasi emas
-                  <i class="bx bxs-quote-alt-right quote-icon-right"></i>
-                </p>
-              </div>
-            </div><!-- End testimonial item -->
+                <div class="swiper-slide">
+                  <div class="testimonial-item">
+                    <img src="assets/img/testimonials/testimonials-4.jpg" class="testimonial-img" alt="">
+                    <h3>irfan png</h3>
+                    <h4>pebasket handal</h4>
+                    <p>
+                      <i class="bx bxs-quote-alt-left quote-icon-left"></i>
+                      Menginspirasi setiap langkah kecil menuju mimpi besar
+                      <i class="bx bxs-quote-alt-right quote-icon-right"></i>
+                    </p>
+                  </div>
+                </div><!-- End testimonial item -->
 
-            <div class="swiper-slide">
-              <div class="testimonial-item">
-                <img src="assets/img/testimonials/testimonials-4.jpg" class="testimonial-img" alt="">
-                <h3>irfan png</h3>
-                <h4>pebasket handal</h4>
-                <p>
-                  <i class="bx bxs-quote-alt-left quote-icon-left"></i>
-                  Menginspirasi setiap langkah kecil menuju mimpi besar
-                  <i class="bx bxs-quote-alt-right quote-icon-right"></i>
-                </p>
-              </div>
-            </div><!-- End testimonial item -->
-
-            <div class="swiper-slide">
-              <div class="testimonial-item">
-                <img src="assets/img/testimonials/testimonials-5.jpg" class="testimonial-img" alt="">
-                <h3>irfan mandor</h3>
-                <h4>mandor</h4>
-                <p>
-                  <i class="bx bxs-quote-alt-left quote-icon-left"></i>
-                  Membimbing dengan hati, mengajar dengan cinta.
-                  <i class="bx bxs-quote-alt-right quote-icon-right"></i>
-                </p>
-              </div>
-            </div><!-- End testimonial item -->
-
+                <div class="swiper-slide">
+                  <div class="testimonial-item">
+                    <img src="assets/img/testimonials/testimonials-5.jpg" class="testimonial-img" alt="">
+                    <h3>irfan mandor</h3>
+                    <h4>mandor</h4>
+                    <p>
+                      <i class="bx bxs-quote-alt-left quote-icon-left"></i>
+                      Membimbing dengan hati, mengajar dengan cinta.
+                      <i class="bx bxs-quote-alt-right quote-icon-right"></i>
+                    </p>
+                  </div>
+                </div><!-- End testimonial item -->
+            <?php endif; ?>
           </div>
           <div class="swiper-pagination"></div>
       
@@ -542,95 +540,55 @@ SDIT Al Fatah dengan bangga mempersembahkan berbagai kegiatan outdoor yang diran
           <p>Manajemen Sekolah</p>
         </div>
 
+        <?php if (empty($team_members)): ?>
         <div class="row" data-aos="fade-left">
-          <div class="col-lg-3 col-md-6">
-            <div class="member" data-aos="zoom-in" data-aos-delay="100">
-              <div class="pic"><img src="assets/img/team/team-1.jpg" class="img-fluid" alt=""></div>
-              <div class="member-info">
-                <h4>Khaeruddin, S.Pd.I</h4>
-                <span>Kepala Sekolah</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-lg-3 col-md-6 mt-5 mt-md-0">
-            <div class="member" data-aos="zoom-in" data-aos-delay="200">
-              <div class="pic"><img src="assets/img/team/team-2.jpg" class="img-fluid" alt=""></div>
-              <div class="member-info">
-                <h4>Sumartiah, S.Psi</h4>
-                <span>Waka Kurikulum</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-lg-3 col-md-6 mt-5 mt-lg-0">
-            <div class="member" data-aos="zoom-in" data-aos-delay="300">
-              <div class="pic"><img src="assets/img/team/team-3.jpg" class="img-fluid" alt=""></div>
-              <div class="member-info">
-                <h4>Saimah, S.Pd.I</h4>
-                <span>Waka Kurikulum</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-lg-3 col-md-6 mt-5 mt-lg-0">
-            <div class="member" data-aos="zoom-in" data-aos-delay="400">
-              <div class="pic"><img src="assets/img/team/team-4.jpg" class="img-fluid" alt=""></div>
-              <div class="member-info">
-                <h4>Saeful Anwar, S.Sos.I</h4>
-                <span>Kesiswaan</span>
-              </div>
-            </div>
+          <div class="col-12 text-center py-4">
+            <p class="text-muted mb-0">Belum ada data tim. Kelola anggota tim melalui admin panel.</p>
           </div>
         </div>
+        <?php else: ?>
+        <?php
+        $team_rows = array_chunk($team_members, 4);
+        $row_index = 0;
+        foreach ($team_rows as $row_members):
+          $row_index++;
+        ?>
+        <?php if ($row_index > 1): ?>
       </div>
-    </section><!-- End Team Section -->
+    </section>
 
     <section id="team" class="team">
       <div class="container">
+        <?php endif; ?>
         <div class="row" data-aos="fade-left">
-          <div class="col-lg-3 col-md-6">
-            <div class="member" data-aos="zoom-in" data-aos-delay="100">
-              <div class="pic"><img src="assets/img/team/team-1.jpg" class="img-fluid" alt=""></div>
+          <?php
+          $col_classes = ['', 'mt-5 mt-md-0', 'mt-5 mt-lg-0', 'mt-5 mt-lg-0'];
+          $delay_base = 100;
+          foreach ($row_members as $col_index => $member):
+            $delay = $delay_base + ($col_index * 100);
+            $col_class = $col_classes[$col_index] ?? 'mt-5 mt-lg-0';
+            if (!empty($member['photo']) && file_exists('admin/uploads/' . $member['photo'])) {
+              $photo_src = 'admin/uploads/' . $member['photo'];
+            } else {
+              $fallback = ($col_index % 4) + 1;
+              $photo_src = 'assets/img/team/team-' . $fallback . '.jpg';
+            }
+          ?>
+          <div class="col-lg-3 col-md-6<?= $col_class !== '' ? ' ' . $col_class : '' ?>">
+            <div class="member" data-aos="zoom-in" data-aos-delay="<?= (int) $delay ?>">
+              <div class="pic"><img src="<?= htmlspecialchars($photo_src) ?>" class="img-fluid" alt="<?= htmlspecialchars($member['name']) ?>"></div>
               <div class="member-info">
-                <h4>Nurjanah, S.Pd</h4>
-                <span>Kesiswaan 2</span>
+                <h4><?= htmlspecialchars($member['name']) ?></h4>
+                <span><?= htmlspecialchars($member['position']) ?></span>
               </div>
             </div>
           </div>
-
-          <div class="col-lg-3 col-md-6 mt-5 mt-md-0">
-            <div class="member" data-aos="zoom-in" data-aos-delay="200">
-              <div class="pic"><img src="assets/img/team/team-2.jpg" class="img-fluid" alt=""></div>
-              <div class="member-info">
-                <h4>Muhammad Al Haraki Alvi Rusyadi, SE</h4>
-                <span>Waka Sarpras</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-lg-3 col-md-6 mt-5 mt-lg-0">
-            <div class="member" data-aos="zoom-in" data-aos-delay="300">
-              <div class="pic"><img src="assets/img/team/team-3.jpg" class="img-fluid" alt=""></div>
-              <div class="member-info">
-                <h4>Irfan Hilman Pangestu</h4>
-                <span>Operator Sekolah</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-lg-3 col-md-6 mt-5 mt-lg-0">
-            <div class="member" data-aos="zoom-in" data-aos-delay="400">
-              <div class="pic"><img src="assets/img/team/team-4.jpg" class="img-fluid" alt=""></div>
-              <div class="member-info">
-                <h4>Didi Darmadi</h4>
-                <span>Komite Sekolah</span>
-              </div>
-            </div>
-          </div>
+          <?php endforeach; ?>
         </div>
+        <?php endforeach; ?>
+        <?php endif; ?>
       </div>
-    </section><!-- End Team Section --> 
+    </section><!-- End Team Section -->
 
     
     <!-- ======= Pricing Section =======
@@ -848,78 +806,7 @@ SDIT Al Fatah dengan bangga mempersembahkan berbagai kegiatan outdoor yang diran
 
   </main><!-- End #main -->
 
-  <!-- ======= Footer ======= -->
-  <footer id="footer">
-    <div class="footer-top">
-      <div class="container">
-        <div class="row">
-
-          <div class="col-lg-4 col-md-6">
-            <div class="footer-info">
-              <h3>SDIT AL FATAH</h3>
-              <p class="pb-3"><em>"Bersama Mencetak Generasi Islami yang Cerdas dan Berakhlak Mulia"
-                </em></p>
-              <p>
-                Jl. Masjid Al-Muawanah No.60, RT.006/RW.012, Aren Jaya, Kec. Bekasi Tim., Kota Bks, Jawa Barat 17111 <br>
-                <br><br>
-                <strong>Phone:</strong> +62 0000 0000 0000<br>
-                <strong>Email:</strong> sditalfatah.60@gmail.com<br>
-              </p>
-              <?php include __DIR__ . '/includes/public_footer_social.php'; ?>
-
-            </div>
-          </div>
-          
-            <div class="col-lg-2 col-md-6 footer-links">
-              <h4>Layanan Kepegawaian</h4>
-              <ul>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Administrasi Umum</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Surat Keluar Masuk</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Surat PPDB</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Administrasi Penilaian</a></li>
-            
-            </ul>
-          </div>
-
-
-            <div class="col-lg-2 col-md-6 footer-links">
-              <h4>Tautan</h4>
-              <ul>
-                <li><i class="bx bx-chevron-right"></i> <a href="#">Profil Dapodik</a></li>
-                <li><i class="bx bx-chevron-right"></i> <a href="#">Periksa NISN</a></li>
-                <li><i class="bx bx-chevron-right"></i> <a href="#">informasi KJP</a></li>
-                <li><i class="bx bx-chevron-right"></i> <a href="#">PPDB</a></li>
-
-              </ul>
-          </div> 
-
-  
-            <div class="col-lg-4 col-md-6 footer-newsletter">
-              <h4>Our Newsletter</h4>
-            <p>Subscribe channel Youtube kami</p>
-            <form action="" method="post">
-              <input type="email" name="email"><input type="submit" value="Subscribe" href="https://www.youtube.com/@sditalfatahbekasi">
-            </form>
-          </div>
-        
-
-        </div>
-      </div>
-    </div>
-
-    <div class="container">
-      <div class="copyright">
-        &copy; Copyright <strong><span style="color: #0fff63;">Sdit Al Fatah</span></strong>. All Rights Reserved
-      </div>
-      <div class="credits">
-        <!-- All the links in the footer should remain intact. -->
-        <!-- You can delete the links only if you purchased the pro version. -->
-        <!-- Licensing information: https://bootstrapmade.com/license/ -->
-        <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/bootslander-free-bootstrap-landing-page-template/ -->
-        Designed by <Strong><span style="color: #00ff59;">Adriansyah</span></Strong>
-      </div>
-    </div>
-  </footer><!-- End Footer -->
+  <?php include __DIR__ . '/includes/public_footer.php'; ?>
 
   <?php include __DIR__ . '/includes/public_wa_float.php'; ?>
   <div id="preloader"></div>

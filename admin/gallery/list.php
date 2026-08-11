@@ -1,7 +1,7 @@
 <?php
 // admin/gallery/list.php
 require_once '../includes/auth.php';
-require_admin_role();
+require_role('editor'); // Boleh diakses editor, admin, dan superadmin
 require_once '../config/db.php';
 
 $error = '';
@@ -44,10 +44,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         mkdir('../uploads', 0755, true);
                     }
 
+                    $category_id = intval($_POST['category_id'] ?? 0);
+                    if ($category_id <= 0) {
+                        $category_id = null;
+                    }
                     if (move_uploaded_file($file_tmp, '../uploads/' . $image_name)) {
                         try {
-                            $stmt = $pdo->prepare("INSERT INTO gallery (caption, image) VALUES (?, ?)");
-                            $stmt->execute([$caption, $image_name]);
+                            $stmt = $pdo->prepare("INSERT INTO gallery (caption, image, category_id) VALUES (?, ?, ?)");
+                            $stmt->execute([$caption, $image_name, $category_id]);
 
                             header("Location: list.php?msg=upload_success");
                             exit();
@@ -63,9 +67,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
+// Fetch all categories for the dropdown
+try {
+    $stmtCategories = $pdo->query("SELECT id, name FROM gallery_categories ORDER BY name ASC");
+    $categories = $stmtCategories->fetchAll();
+} catch (PDOException $e) {
+    $categories = [];
+}
+
 // Fetch all gallery items
 try {
-    $stmt = $pdo->query("SELECT * FROM gallery ORDER BY created_at DESC");
+    $stmt = $pdo->query("SELECT g.*, c.name as category_name FROM gallery g LEFT JOIN gallery_categories c ON g.category_id = c.id ORDER BY g.created_at DESC");
     $gallery_list = $stmt->fetchAll();
 } catch (PDOException $e) {
     die("Database error: " . $e->getMessage());
@@ -185,6 +197,16 @@ try {
                                 <small class="text-muted d-block text-start">Maksimal 2MB (JPG, JPEG, PNG, WEBP)</small>
                             </div>
 
+                            <div class="mb-3">
+                                <label for="category_id" class="form-label fw-semibold text-secondary">Kategori Galeri</label>
+                                <select name="category_id" id="category_id" class="form-select bg-light border-0 py-2.5 px-3 rounded-3" required>
+                                    <option value="" disabled selected>-- Pilih Kategori --</option>
+                                    <?php foreach ($categories as $cat): ?>
+                                        <option value="<?= (int) $cat['id'] ?>"><?= htmlspecialchars($cat['name']) ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+
                             <div class="mb-4">
                                 <label for="caption" class="form-label fw-semibold text-secondary">Keterangan / Caption</label>
                                 <textarea class="form-control bg-light border-0 py-2 px-3 rounded-3" id="caption" name="caption" rows="3" placeholder="Masukkan deskripsi singkat tentang foto ini..."></textarea>
@@ -218,17 +240,22 @@ try {
                                                 <?php endif; ?>
                                             </div>
                                             <div class="p-3">
+                                                <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-pill px-2.5 py-1 mb-2 d-inline-block" style="font-size: 10px; font-weight: 600;">
+                                                    <i class="fa-solid fa-folder me-1"></i> <?= htmlspecialchars($photo['category_name'] ?? 'Umum') ?>
+                                                </span>
                                                 <p class="gallery-caption mb-2 fw-medium">
                                                     <?= !empty($photo['caption']) ? htmlspecialchars($photo['caption']) : '<em class="text-muted small">Tanpa keterangan</em>' ?>
                                                 </p>
                                                 <div class="d-flex justify-content-between align-items-center mt-2 border-top pt-2">
                                                     <span class="text-muted" style="font-size: 11px;"><i class="fa-regular fa-clock me-1"></i> <?= date('d/m/Y', strtotime($photo['created_at'])) ?></span>
+                                                    <?php if (!is_editor_role()): ?>
                                                     <form action="delete.php" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus foto ini?')">
                                                         <input type="hidden" name="id" value="<?= $photo['id'] ?>">
                                                         <button type="submit" class="btn btn-sm btn-outline-danger border-0 p-1 px-2" title="Hapus Foto">
                                                             <i class="fa-solid fa-trash-can"></i> Hapus
                                                         </button>
                                                     </form>
+                                                    <?php endif; ?>
                                                 </div>
                                             </div>
                                         </div>

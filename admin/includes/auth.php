@@ -19,4 +19,25 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
 }
 
 require_once __DIR__ . '/roles.php';
-?>
+
+// Sinkronkan role dari database ke session (jika role di DB berubah)
+if (isset($_SESSION['admin_id'])) {
+    require_once __DIR__ . '/../config/db.php';
+    try {
+        require_once __DIR__ . '/../sql/migrate.php';
+        $stmt = $pdo->prepare("SELECT role FROM admins WHERE id = ? LIMIT 1");
+        $stmt->execute([(int) $_SESSION['admin_id']]);
+        $row = $stmt->fetch();
+        if ($row && !empty($row['role'])) {
+            $_SESSION['admin_role'] = $row['role'];
+        } elseif (!isset($_SESSION['admin_role'])) {
+            $_SESSION['admin_role'] = 'admin';
+        }
+    } catch (PDOException $e) {
+        if (!isset($_SESSION['admin_role'])) {
+            $_SESSION['admin_role'] = 'admin';
+        }
+    }
+} elseif (!isset($_SESSION['admin_role'])) {
+    $_SESSION['admin_role'] = 'admin';
+}

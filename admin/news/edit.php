@@ -27,14 +27,14 @@ $error = '';
 $title = $news['title'];
 $slug = $news['slug'];
 $content = $news['content'];
-$is_published = $news['is_published'];
+$status = $news['status'];
 $existing_image = $news['image'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = trim($_POST['title'] ?? '');
     $slug = trim($_POST['slug'] ?? '');
     $content = trim($_POST['content'] ?? '');
-    $is_published = isset($_POST['is_published']) ? 1 : 0;
+    $status = isset($_POST['is_published']) ? 'published' : 'pending';
 
     // Generate slug if empty
     if (empty($slug)) {
@@ -97,8 +97,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
 
                 // Update database
-                $stmt = $pdo->prepare("UPDATE news SET title = ?, slug = ?, content = ?, image = ?, is_published = ? WHERE id = ?");
-                $stmt->execute([$title, $slug, $content, $image_name, $is_published, $id]);
+                $stmt = $pdo->prepare("UPDATE news SET title = ?, slug = ?, content = ?, image = ?, status = ? WHERE id = ?");
+                $stmt->execute([$title, $slug, $content, $image_name, $status, $id]);
 
                 header("Location: list.php?msg=edit_success");
                 exit();
@@ -207,7 +207,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <div class="card-body p-4">
                                     <label class="form-label fw-semibold text-secondary d-block mb-3">Status Publikasi</label>
                                     <div class="form-check form-switch">
-                                        <input class="form-check-input" type="checkbox" role="switch" id="is_published" name="is_published" value="1" <?= ($is_published == 1) ? 'checked' : '' ?>>
+                                        <input class="form-check-input" type="checkbox" role="switch" id="is_published" name="is_published" value="1" <?= ($status === 'published') ? 'checked' : '' ?>>
                                         <label class="form-check-label fw-medium" for="is_published">Terbitkan Berita</label>
                                     </div>
                                     <small class="text-muted d-block mt-2">Aktifkan untuk menampilkan berita langsung di website utama.</small>
