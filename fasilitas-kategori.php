@@ -49,6 +49,9 @@ $is_home = false;
   <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
   <link href="assets/css/style.css" rel="stylesheet">
   <style>
+    .gallery-folder-card {
+        cursor: pointer;
+    }
     .facility-static-card {
         background: #fff;
         border: 0;

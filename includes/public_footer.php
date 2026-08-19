@@ -54,23 +54,28 @@ try {
         <!-- Kolom 2: Jam Pelayanan (Hanya muncul di Mobile, posisi kedua) -->
         <div class="col-lg-4 col-md-6 order-2 d-lg-none footer-links mb-4">
           <h4>Jam Pelayanan</h4>
-          <div class="p-3 rounded-3 border border-light border-opacity-10" style="background: rgba(255, 255, 255, 0.03); font-size: 14px; font-family: 'Poppins', sans-serif;">
-            <ul class="list-unstyled mb-0" style="line-height: 1.8; padding-left: 0; color: rgba(255, 255, 255, 0.85); margin-bottom: 0;">
-              <li class="mb-1">
-                <i class="bx bx-time-five text-success me-2" style="font-size: 16px; vertical-align: middle;"></i> 
-                Senin–Jumat: 07.00–16.00 WIB
-              </li>
-              <li>
-                <i class="bx bx-calendar-x text-danger me-2" style="font-size: 16px; vertical-align: middle;"></i> 
-                Sabtu, Minggu & Hari Besar: Libur
-              </li>
-            </ul>
+          <div class="jam-pelayanan-card">
+            <div class="jam-pelayanan-item">
+              <div class="icon-wrapper">
+                <i class="fa-solid fa-clock"></i>
+              </div>
+              <span class="jam-pelayanan-text">Senin–Jumat: 07.00–16.00 WIB</span>
+            </div>
+            <div class="jam-pelayanan-item">
+              <div class="icon-wrapper">
+                <i class="fa-solid fa-calendar-xmark"></i>
+              </div>
+              <span class="jam-pelayanan-text">Sabtu, Minggu & Hari Besar: Libur</span>
+            </div>
           </div>
           <div class="mt-3">
-            <h4 style="font-size: 14px; text-transform: uppercase; color: #fff; font-weight: 600; font-family: 'Poppins', sans-serif; letter-spacing: 1px; margin-bottom: 10px;">Waktu Sekarang</h4>
-            <div class="p-3 rounded-3 border border-light border-opacity-10" style="background: rgba(255, 255, 255, 0.03); font-family: 'Poppins', sans-serif;">
-              <div class="realtime-clock" style="font-family: 'Courier New', Courier, monospace; font-size: 20px; font-weight: bold; color: #1acc8d; line-height: 1.2;">00:00:00 WIB</div>
-              <div class="realtime-date mt-1" style="font-size: 12px; color: rgba(255, 255, 255, 0.6);">-</div>
+            <div class="waktu-sekarang-card">
+              <div class="waktu-sekarang-label">
+                <span class="live-dot"></span>
+                Waktu Sekarang
+              </div>
+              <div class="realtime-clock waktu-sekarang-jam">00:00:00 WIB</div>
+              <div class="realtime-date waktu-sekarang-tanggal">-</div>
             </div>
           </div>
         </div>
@@ -105,23 +110,28 @@ try {
           <!-- Jam Pelayanan (Hanya muncul di Desktop, berada langsung di bawah Layanan Kepegawaian) -->
           <div class="d-none d-lg-block mt-4">
             <h4>Jam Pelayanan</h4>
-            <div class="p-3 rounded-3 border border-light border-opacity-10" style="background: rgba(255, 255, 255, 0.03); font-size: 14px; font-family: 'Poppins', sans-serif;">
-              <ul class="list-unstyled mb-0" style="line-height: 1.8; padding-left: 0; color: rgba(255, 255, 255, 0.85); margin-bottom: 0;">
-                <li class="mb-1">
-                  <i class="bx bx-time-five text-success me-2" style="font-size: 16px; vertical-align: middle;"></i> 
-                  Senin–Jumat: 07.00–16.00 WIB
-                </li>
-                <li>
-                  <i class="bx bx-calendar-x text-danger me-2" style="font-size: 16px; vertical-align: middle;"></i> 
-                  Sabtu, Minggu & Hari Besar: Libur
-                </li>
-              </ul>
+            <div class="jam-pelayanan-card">
+              <div class="jam-pelayanan-item">
+                <div class="icon-wrapper">
+                  <i class="fa-solid fa-clock"></i>
+                </div>
+                <span class="jam-pelayanan-text">Senin–Jumat: 07.00–16.00 WIB</span>
+              </div>
+              <div class="jam-pelayanan-item">
+                <div class="icon-wrapper">
+                  <i class="fa-solid fa-calendar-xmark"></i>
+                </div>
+                <span class="jam-pelayanan-text">Sabtu, Minggu & Hari Besar: Libur</span>
+              </div>
             </div>
             <div class="mt-3">
-              <h4 style="font-size: 14px; text-transform: uppercase; color: #fff; font-weight: 600; font-family: 'Poppins', sans-serif; letter-spacing: 1px; margin-bottom: 10px;">Waktu Sekarang</h4>
-              <div class="p-3 rounded-3 border border-light border-opacity-10" style="background: rgba(255, 255, 255, 0.03); font-family: 'Poppins', sans-serif;">
-                <div class="realtime-clock" style="font-family: 'Courier New', Courier, monospace; font-size: 20px; font-weight: bold; color: #1acc8d; line-height: 1.2;">00:00:00 WIB</div>
-                <div class="realtime-date mt-1" style="font-size: 12px; color: rgba(255, 255, 255, 0.6);">-</div>
+              <div class="waktu-sekarang-card">
+                <div class="waktu-sekarang-label">
+                  <span class="live-dot"></span>
+                  Waktu Sekarang
+                </div>
+                <div class="realtime-clock waktu-sekarang-jam">00:00:00 WIB</div>
+                <div class="realtime-date waktu-sekarang-tanggal">-</div>
               </div>
             </div>
           </div>
@@ -170,6 +180,8 @@ try {
 </footer><!-- End Footer -->
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700;800&display=swap');
+
 @media (max-width: 991.98px) {
     .footer-collapse-header {
         display: flex;
@@ -198,6 +210,141 @@ try {
     .footer-collapse-header i {
         display: none !important;
     }
+}
+
+/* Card Jam Pelayanan */
+.jam-pelayanan-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 20px;
+  backdrop-filter: blur(8px);
+}
+.jam-pelayanan-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 0;
+}
+.jam-pelayanan-item:not(:last-child) {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.jam-pelayanan-item .icon-wrapper {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 16px;
+}
+.jam-pelayanan-item:nth-child(1) .icon-wrapper {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+}
+.jam-pelayanan-item:nth-child(2) .icon-wrapper {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+}
+.jam-pelayanan-text {
+  font-size: 15px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.9);
+  line-height: 1.5;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Card Waktu Sekarang */
+.waktu-sekarang-card {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.12), rgba(20, 20, 50, 0.3));
+  border: 1px solid rgba(34, 197, 94, 0.25);
+  border-radius: 14px;
+  padding: 22px;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+.waktu-sekarang-card::before {
+  content: '';
+  position: absolute;
+  top: -30%;
+  right: -10%;
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle, rgba(74, 222, 128, 0.15), transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.waktu-sekarang-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(74, 222, 128, 0.8);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Poppins', sans-serif;
+}
+.waktu-sekarang-jam {
+  font-family: 'JetBrains Mono', 'Roboto Mono', 'Consolas', monospace;
+  font-weight: 800; /* extra bold */
+  font-size: 34px;
+  letter-spacing: 1px;
+  color: #4ade80;
+  text-shadow: 0 0 20px rgba(74, 222, 128, 0.4);
+  -webkit-text-stroke: 0.5px rgba(74, 222, 128, 0.3); /* tambahan ketebalan visual */
+  line-height: 1.2;
+}
+.waktu-sekarang-tanggal {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.55);
+  margin-top: 6px;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Blinking Live Indicator Dot */
+.live-dot {
+  width: 8px;
+  height: 8px;
+  background-color: #4ade80;
+  border-radius: 50%;
+  display: inline-block;
+  animation: pulse 1.5s infinite ease-in-out;
+  box-shadow: 0 0 8px #4ade80;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.3;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Responsive adjustments for mobile footer layout */
+@media (max-width: 767.98px) {
+  .jam-pelayanan-card {
+    padding: 16px;
+  }
+  .jam-pelayanan-text {
+    font-size: 13px;
+  }
+  .waktu-sekarang-card {
+    padding: 16px;
+  }
+  .waktu-sekarang-jam {
+    font-size: 26px;
+  }
 }
 </style>
 

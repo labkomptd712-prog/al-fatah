@@ -1026,6 +1026,8 @@ section {
 .testimonials .testimonials-carousel,
 .testimonials .testimonials-slider {
   overflow: hidden;
+  position: relative;
+  padding-bottom: 40px !important;
 }
 
 .testimonials .testimonial-item {
@@ -1033,11 +1035,20 @@ section {
   color: #fff;
 }
 
-.testimonials .testimonial-item .testimonial-img {
-  width: 100px;
+.testimonials .testimonial-item .testimonial-avatar {
+  width: 180px;
+  height: 180px;
   border-radius: 50%;
   border: 6px solid rgba(255, 255, 255, 0.15);
   margin: 0 auto;
+  overflow: hidden;
+  display: block;
+}
+
+.testimonials .testimonial-item .testimonial-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .testimonials .testimonial-item h3 {
@@ -1083,11 +1094,21 @@ section {
   position: relative;
 }
 
+.testimonials .swiper-pagination.swiper-pagination-bullets-dynamic {
+  position: absolute !important;
+  bottom: 10px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  margin-top: 0 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+}
+
 .testimonials .swiper-pagination .swiper-pagination-bullet {
   width: 12px;
   height: 12px;
-  opacity: 1;
   background-color: rgba(255, 255, 255, 0.4);
+  transition: transform 0.2s ease, opacity 0.2s ease !important;
 }
 
 .testimonials .swiper-pagination .swiper-pagination-bullet-active {

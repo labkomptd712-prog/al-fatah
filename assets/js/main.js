@@ -182,7 +182,9 @@
     pagination: {
       el: '.swiper-pagination',
       type: 'bullets',
-      clickable: true
+      clickable: true,
+      dynamicBullets: true,
+      dynamicMainBullets: 3
     }
   });
 

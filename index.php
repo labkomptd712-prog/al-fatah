@@ -61,7 +61,7 @@ $is_home = true;
   <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
 
   <!-- Template Main CSS File -->
-  <link href="assets/css/style.css" rel="stylesheet">
+  <link href="assets/css/style.css?v=1.3" rel="stylesheet">
 
   <!-- =======================================================
   * Template Name: Bootslander
@@ -448,7 +448,9 @@ SDIT Al Fatah dengan bangga mempersembahkan berbagai kegiatan outdoor yang diran
             ?>
                 <div class="swiper-slide">
                   <div class="testimonial-item">
-                    <img src="<?= htmlspecialchars($photo_url) ?>" class="testimonial-img" alt="">
+                    <div class="testimonial-avatar">
+                      <img src="<?= htmlspecialchars($photo_url) ?>" alt="" style="object-position: <?= htmlspecialchars($t['photo_position'] ?? 'center') ?>;">
+                    </div>
                     <h3><?= htmlspecialchars($t['name']) ?></h3>
                     <h4><?= htmlspecialchars($t['position']) ?></h4>
                     <p>
@@ -464,7 +466,9 @@ SDIT Al Fatah dengan bangga mempersembahkan berbagai kegiatan outdoor yang diran
             ?>
                 <div class="swiper-slide">
                   <div class="testimonial-item">
-                    <img src="assets/img/testimonials/testimonials-1.jpg" class="testimonial-img" alt="">
+                    <div class="testimonial-avatar">
+                      <img src="assets/img/testimonials/testimonials-1.jpg" alt="">
+                    </div>
                     <h3>irfan hp</h3>
                     <h4>admin&amp; user</h4>
                     <p>
@@ -477,7 +481,9 @@ SDIT Al Fatah dengan bangga mempersembahkan berbagai kegiatan outdoor yang diran
 
                 <div class="swiper-slide">
                   <div class="testimonial-item">
-                    <img src="assets/img/testimonials/testimonials-2.jpg" class="testimonial-img" alt="">
+                    <div class="testimonial-avatar">
+                      <img src="assets/img/testimonials/testimonials-2.jpg" alt="">
+                    </div>
                     <h3>irfan cv</h3>
                     <h4>Designer</h4>
                     <p>
@@ -490,7 +496,9 @@ SDIT Al Fatah dengan bangga mempersembahkan berbagai kegiatan outdoor yang diran
 
                 <div class="swiper-slide">
                   <div class="testimonial-item">
-                    <img src="assets/img/testimonials/testimonials-3.jpg" class="testimonial-img" alt="">
+                    <div class="testimonial-avatar">
+                      <img src="assets/img/testimonials/testimonials-3.jpg" alt="">
+                    </div>
                     <h3>irfan jpg</h3>
                     <h4>guru</h4>
                     <p>
@@ -503,7 +511,9 @@ SDIT Al Fatah dengan bangga mempersembahkan berbagai kegiatan outdoor yang diran
 
                 <div class="swiper-slide">
                   <div class="testimonial-item">
-                    <img src="assets/img/testimonials/testimonials-4.jpg" class="testimonial-img" alt="">
+                    <div class="testimonial-avatar">
+                      <img src="assets/img/testimonials/testimonials-4.jpg" alt="">
+                    </div>
                     <h3>irfan png</h3>
                     <h4>pebasket handal</h4>
                     <p>
@@ -516,7 +526,9 @@ SDIT Al Fatah dengan bangga mempersembahkan berbagai kegiatan outdoor yang diran
 
                 <div class="swiper-slide">
                   <div class="testimonial-item">
-                    <img src="assets/img/testimonials/testimonials-5.jpg" class="testimonial-img" alt="">
+                    <div class="testimonial-avatar">
+                      <img src="assets/img/testimonials/testimonials-5.jpg" alt="">
+                    </div>
                     <h3>irfan mandor</h3>
                     <h4>mandor</h4>
                     <p>
@@ -529,7 +541,8 @@ SDIT Al Fatah dengan bangga mempersembahkan berbagai kegiatan outdoor yang diran
             <?php endif; ?>
           </div>
           <div class="swiper-pagination"></div>
-      
+        </div>
+      </div>
     </section><!-- End Testimonials Section -->
 
     <!-- ======= Team Section ======= -->
@@ -576,7 +589,7 @@ SDIT Al Fatah dengan bangga mempersembahkan berbagai kegiatan outdoor yang diran
           ?>
           <div class="col-lg-3 col-md-6<?= $col_class !== '' ? ' ' . $col_class : '' ?>">
             <div class="member" data-aos="zoom-in" data-aos-delay="<?= (int) $delay ?>">
-              <div class="pic"><img src="<?= htmlspecialchars($photo_src) ?>" class="img-fluid" alt="<?= htmlspecialchars($member['name']) ?>"></div>
+              <div class="pic"><img src="<?= htmlspecialchars($photo_src) ?>" class="img-fluid" alt="<?= htmlspecialchars($member['name']) ?>" style="object-position: <?= htmlspecialchars($member['photo_position'] ?? 'center') ?>;"></div>
               <div class="member-info">
                 <h4><?= htmlspecialchars($member['name']) ?></h4>
                 <span><?= htmlspecialchars($member['position']) ?></span>
@@ -697,7 +710,7 @@ SDIT Al Fatah dengan bangga mempersembahkan berbagai kegiatan outdoor yang diran
             </li>
 
             <li data-aos="fade-up" data-aos-delay="100">
-              <i class="bx bx-help-circle icon-help"></i> <a data-bs-toggle="collapse" data-bs-target="#faq-list-2" class="collapsed">Apa saja fasilitas yang tersedia di SDIT Al-Fatah?<i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i></a>
+              <i class="bx bx-help-circle icon-help"></i> <a data-bs-toggle="collapse" data-bs-target="#faq-list-2" class="collapsed">Apa saja fasilitas yang tersedia di SDIT Al Fatah?<i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i></a>
               <div id="faq-list-2" class="collapse" data-bs-parent=".faq-list">
                 <p>
                   SDIT Al Fatah menyediakan berbagai fasilitas untuk mendukung proses belajar mengajar, termasuk ruang kelas yang nyaman, perpustakaan, laboratorium komputer, ruang ibadah, lapangan olahraga, dan ruang kegiatan ekstrakurikuler. Kami juga memiliki lingkungan sekolah yang aman dan ramah anak.
@@ -706,7 +719,7 @@ SDIT Al Fatah dengan bangga mempersembahkan berbagai kegiatan outdoor yang diran
             </li>
 
             <li data-aos="fade-up" data-aos-delay="200">
-              <i class="bx bx-help-circle icon-help"></i> <a data-bs-toggle="collapse" data-bs-target="#faq-list-3" class="collapsed">Apa saja fasilitas yang tersedia di SDIT Al-Fatah? <i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i></a>
+              <i class="bx bx-help-circle icon-help"></i> <a data-bs-toggle="collapse" data-bs-target="#faq-list-3" class="collapsed">Apa saja fasilitas yang tersedia di SDIT Al Fatah? <i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i></a>
               <div id="faq-list-3" class="collapse" data-bs-parent=".faq-list">
                 <p>
                   SDIT Al Fatah menyediakan berbagai fasilitas untuk mendukung proses belajar mengajar, termasuk ruang kelas yang nyaman, perpustakaan, laboratorium komputer, ruang ibadah, lapangan olahraga, dan ruang kegiatan ekstrakurikuler. Kami juga memiliki lingkungan sekolah yang aman dan ramah anak.
@@ -715,7 +728,7 @@ SDIT Al Fatah dengan bangga mempersembahkan berbagai kegiatan outdoor yang diran
             </li>
 
             <li data-aos="fade-up" data-aos-delay="300">
-              <i class="bx bx-help-circle icon-help"></i> <a data-bs-toggle="collapse" data-bs-target="#faq-list-4" class="collapsed">Bagaimana sistem pengajaran agama di SDIT Al- atah? <i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i></a>
+              <i class="bx bx-help-circle icon-help"></i> <a data-bs-toggle="collapse" data-bs-target="#faq-list-4" class="collapsed">Bagaimana sistem pengajaran agama di SDIT Al Fatah? <i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i></a>
               <div id="faq-list-4" class="collapse" data-bs-parent=".faq-list">
                 <p>
                   Di SDIT Al Fatah, pendidikan agama Islam menjadi bagian integral dari kurikulum. Selain pelajaran agama di kelas, siswa juga mengikuti kegiatan keagamaan seperti shalat berjamaah, hafalan Al-Qur'an, dan kegiatan keagamaan lainnya. Kami berkomitmen untuk menanamkan nilai-nilai Islami dalam kehidupan sehari-hari siswa
@@ -820,7 +833,7 @@ SDIT Al Fatah dengan bangga mempersembahkan berbagai kegiatan outdoor yang diran
   <script src="assets/vendor/php-email-form/validate.js"></script>
 
   <!-- Template Main JS File -->
-  <script src="assets/js/main.js"></script>
+  <script src="assets/js/main.js?v=1.1"></script>
 
 </body>
 

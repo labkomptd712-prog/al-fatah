@@ -295,6 +295,70 @@ try {
         $pdo->exec("INSERT INTO ekskul_categories (name, slug, cover_image) VALUES ('Umum', 'umum', NULL)");
     }
 
+    // Tabel prestasi_categories
+    $pdo->exec("CREATE TABLE IF NOT EXISTS prestasi_categories (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      name VARCHAR(100) NOT NULL,
+      slug VARCHAR(100) NOT NULL UNIQUE,
+      cover_image VARCHAR(255) NULL,
+      urutan INT DEFAULT 0,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+    // Tabel prestasi
+    $pdo->exec("CREATE TABLE IF NOT EXISTS prestasi (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      foto VARCHAR(255) NOT NULL,
+      nama_siswa VARCHAR(255) NOT NULL,
+      jenis_lomba VARCHAR(255) NOT NULL,
+      keterangan TEXT NULL,
+      category_id INT NULL,
+      urutan INT DEFAULT 0,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (category_id) REFERENCES prestasi_categories(id) ON DELETE SET NULL
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+    // Seed kategori default "Umum" untuk prestasi jika tabel prestasi_categories kosong
+    $countPrestasiCat = (int) $pdo->query("SELECT COUNT(*) FROM prestasi_categories")->fetchColumn();
+    if ($countPrestasiCat === 0) {
+        $pdo->exec("INSERT INTO prestasi_categories (name, slug, cover_image) VALUES ('Umum', 'umum', NULL)");
+    }
+
+    // Add photo_position column to team table if it doesn't exist
+    $colTeamPos = $pdo->query("SHOW COLUMNS FROM team LIKE 'photo_position'")->fetch();
+    if (!$colTeamPos) {
+        $pdo->exec("ALTER TABLE team ADD COLUMN photo_position VARCHAR(50) DEFAULT 'center'");
+    }
+
+    // Add photo_position column to testimonials table if it doesn't exist
+    $colTestiPos = $pdo->query("SHOW COLUMNS FROM testimonials LIKE 'photo_position'")->fetch();
+    if (!$colTestiPos) {
+        $pdo->exec("ALTER TABLE testimonials ADD COLUMN photo_position VARCHAR(50) DEFAULT 'center'");
+    }
+
+    // CREATE TABLE revision_requests
+    $pdo->exec("CREATE TABLE IF NOT EXISTS revision_requests (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      module_name VARCHAR(50) NOT NULL,
+      item_id INT NOT NULL,
+      item_title VARCHAR(255) NOT NULL,
+      requested_by INT NOT NULL,
+      catatan TEXT NOT NULL,
+      status ENUM('pending', 'selesai') DEFAULT 'pending',
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      resolved_at TIMESTAMP NULL,
+      FOREIGN KEY (requested_by) REFERENCES admins(id) ON DELETE CASCADE
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+    // Seed dummy kepala sekolah account (username: kepsek, role: kepsek)
+    $stmtKepsek = $pdo->prepare("SELECT COUNT(*) FROM admins WHERE username = 'kepsek'");
+    $stmtKepsek->execute();
+    if ((int)$stmtKepsek->fetchColumn() === 0) {
+        $hashKepsek = password_hash('kepsek', PASSWORD_DEFAULT);
+        $stmtInsertKepsek = $pdo->prepare("INSERT INTO admins (username, password, role) VALUES ('kepsek', ?, 'kepsek')");
+        $stmtInsertKepsek->execute([$hashKepsek]);
+    }
+
     if (php_sapi_name() === 'cli') {
         echo "Migrasi berhasil.\n";
     }

@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $role = trim($_POST['role'] ?? 'editor');
     $password = trim($_POST['password'] ?? '');
 
-    if (!in_array($role, ['superadmin', 'admin', 'editor'], true)) {
+    if (!in_array($role, ['superadmin', 'admin', 'editor', 'kepsek'], true)) {
         $error = "Role tidak valid!";
     } elseif ($password !== '' && strlen($password) < 6) {
         $error = "Password baru minimal 6 karakter!";
@@ -101,6 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <option value="superadmin" <?= $role === 'superadmin' ? 'selected' : '' ?>>Superadmin (Akses penuh & kelola akun)</option>
                             <option value="admin" <?= $role === 'admin' ? 'selected' : '' ?>>Admin (Kelola konten website)</option>
                             <option value="editor" <?= $role === 'editor' ? 'selected' : '' ?>>Editor (Hanya ajukan berita/galeri/team)</option>
+                            <option value="kepsek" <?= $role === 'kepsek' ? 'selected' : '' ?>>Kepala Sekolah (Lihat saja & ajukan revisi)</option>
                         </select>
                     </div>
                     <button type="submit" class="btn btn-brand w-100 py-2.5 rounded-3 fw-bold"><i class="fa-solid fa-floppy-disk me-2"></i> Simpan Perubahan</button>

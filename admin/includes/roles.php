@@ -34,6 +34,11 @@ function is_editor_role(): bool
     return ($_SESSION['admin_role'] ?? '') === 'editor';
 }
 
+function is_kepsek_role(): bool
+{
+    return ($_SESSION['admin_role'] ?? '') === 'kepsek';
+}
+
 /**
  * Memastikan hak akses pengguna sesuai role minimal.
  */
@@ -45,9 +50,9 @@ function require_admin_role(string $min_role = 'admin'): void
     if ($min_role === 'superadmin') {
         $allowed = ($current_role === 'superadmin');
     } elseif ($min_role === 'admin') {
-        $allowed = ($current_role === 'admin' || $current_role === 'superadmin');
+        $allowed = ($current_role === 'admin' || $current_role === 'superadmin' || $current_role === 'kepsek');
     } elseif ($min_role === 'editor') {
-        $allowed = in_array($current_role, ['editor', 'admin', 'superadmin'], true);
+        $allowed = in_array($current_role, ['editor', 'admin', 'superadmin', 'kepsek'], true);
     }
     
     if (!$allowed) {

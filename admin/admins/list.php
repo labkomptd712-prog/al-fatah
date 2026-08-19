@@ -86,6 +86,8 @@ $error = $_GET['err'] ?? '';
                                                     <span class="badge bg-danger">Superadmin</span>
                                                 <?php elseif ($admin['role'] === 'editor'): ?>
                                                     <span class="badge bg-info text-dark">Editor</span>
+                                                <?php elseif ($admin['role'] === 'kepsek'): ?>
+                                                    <span class="badge bg-warning text-dark">Kepsek</span>
                                                 <?php else: ?>
                                                     <span class="badge bg-success">Admin</span>
                                                 <?php endif; ?>

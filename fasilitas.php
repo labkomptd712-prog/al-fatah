@@ -56,6 +56,7 @@ try {
     .gallery-folder-card {
         display: block;
         transition: all 0.3s ease;
+        cursor: pointer;
     }
     .folder-cover-wrapper {
         border: 2px solid #f8f9fa;

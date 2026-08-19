@@ -22,8 +22,9 @@ $is_berita = !empty($is_berita);
               <li><a href="ekskul.php" class="<?= (strpos($_SERVER['SCRIPT_NAME'], '/ekskul.php') !== false || strpos($_SERVER['SCRIPT_NAME'], '/ekskul-kategori.php') !== false) ? 'active' : '' ?>">Ekskul</a></li>
             </ul>
           </li>
-          <li><a class="nav-link scrollto" href="<?= $is_home ? '#team' : 'index.php#team' ?>">Team</a></li>
-          <li><a class="nav-link scrollto" href="<?= $is_home ? '#contact' : 'index.php#contact' ?>">Contact</a></li>
+          <li><a class="nav-link<?= (strpos($_SERVER['SCRIPT_NAME'], '/prestasi.php') !== false || strpos($_SERVER['SCRIPT_NAME'], '/prestasi-kategori.php') !== false) ? ' active' : '' ?>" href="prestasi.php">Prestasi</a></li>
+          <li><a class="nav-link<?= (strpos($_SERVER['SCRIPT_NAME'], '/team.php') !== false) ? ' active' : '' ?>" href="team.php">Team</a></li>
+          <li><a class="nav-link<?= (strpos($_SERVER['SCRIPT_NAME'], '/contact.php') !== false) ? ' active' : '' ?>" href="contact.php">Contact</a></li>
         </ul>
         <i class="bi bi-list mobile-nav-toggle"></i>
       </nav><!-- .navbar -->

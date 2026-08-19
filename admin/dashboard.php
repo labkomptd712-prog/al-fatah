@@ -45,6 +45,10 @@ try {
         $stmtPending = $pdo->query("SELECT n.*, a.username as editor_name FROM news n LEFT JOIN admins a ON n.created_by = a.id WHERE n.status = 'pending' ORDER BY n.created_at DESC");
         $pending_news = $stmtPending->fetchAll();
 
+        // Fetch pending revision requests
+        $stmtRevisions = $pdo->query("SELECT r.*, a.username as requested_by_name FROM revision_requests r JOIN admins a ON r.requested_by = a.id WHERE r.status = 'pending' ORDER BY r.created_at DESC");
+        $pending_revisions = $stmtRevisions->fetchAll();
+
         // Fetch latest messages for admin inbox preview
         $stmtMsg = $pdo->query("SELECT * FROM contact_messages ORDER BY created_at DESC LIMIT 5");
         $latest_messages = $stmtMsg->fetchAll();
@@ -336,8 +340,78 @@ $is_admin = is_admin_role();
                 <?php endif; ?>
             </div>
 
+            <?php if ($is_admin): ?>
+            <!-- Revision Requests Queue -->
+            <div class="row g-4 mb-4">
+                <div class="col-12">
+                    <div class="card border-0 rounded-4 shadow-sm p-4 bg-white">
+                        <h5 class="fw-bold text-dark mb-3"><i class="fa-solid fa-comment-dots text-danger me-2" style="color: #ef4444 !important;"></i> Revisi Diajukan Kepsek</h5>
+                        <hr class="mt-0 mb-3 border-light">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Judul Item</th>
+                                        <th>Modul</th>
+                                        <th>Catatan</th>
+                                        <th>Pengaju</th>
+                                        <th>Tanggal</th>
+                                        <th class="text-center" style="width: 200px;">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php if (empty($pending_revisions)): ?>
+                                        <tr>
+                                            <td colspan="6" class="text-center py-4 text-muted small">
+                                                <i class="fa-regular fa-comment-dots fa-2x mb-2 text-secondary opacity-25"></i>
+                                                <p class="mb-0">Tidak ada pengajuan revisi pending dari Kepala Sekolah.</p>
+                                            </td>
+                                        </tr>
+                                    <?php else: ?>
+                                        <?php foreach ($pending_revisions as $rev): 
+                                            // Map module name to edit page
+                                            $edit_link = '';
+                                            if ($rev['module_name'] === 'berita') $edit_link = 'news/edit.php?id=' . $rev['item_id'];
+                                            elseif ($rev['module_name'] === 'fasilitas') $edit_link = 'facilities/edit.php?id=' . $rev['item_id'];
+                                            elseif ($rev['module_name'] === 'ekskul') $edit_link = 'ekskul/edit.php?id=' . $rev['item_id'];
+                                            elseif ($rev['module_name'] === 'prestasi') $edit_link = 'prestasi/edit.php?id=' . $rev['item_id'];
+                                            elseif ($rev['module_name'] === 'testimonial') $edit_link = 'testimonials/edit.php?id=' . $rev['item_id'];
+                                            elseif ($rev['module_name'] === 'team') $edit_link = 'team/edit.php?id=' . $rev['item_id'];
+                                            elseif ($rev['module_name'] === 'kelas') $edit_link = 'classes/edit.php?id=' . $rev['item_id'];
+                                            elseif ($rev['module_name'] === 'struktur') $edit_link = 'struktur/edit.php?id=' . $rev['item_id'];
+                                            elseif ($rev['module_name'] === 'galeri') $edit_link = 'gallery/list.php';
+                                        ?>
+                                            <tr>
+                                                <td class="fw-bold text-dark small"><?= htmlspecialchars($rev['item_title']) ?></td>
+                                                <td><span class="badge bg-info bg-opacity-10 text-info px-2 py-1 small"><?= htmlspecialchars(ucfirst($rev['module_name'])) ?></span></td>
+                                                <td class="small text-muted" style="max-width: 250px;"><?= htmlspecialchars($rev['catatan']) ?></td>
+                                                <td><span class="badge bg-secondary small"><?= htmlspecialchars($rev['requested_by_name']) ?></span></td>
+                                                <td class="text-secondary small" style="font-size: 11px;"><?= date('d/m/Y', strtotime($rev['created_at'])) ?></td>
+                                                <td class="text-center">
+                                                    <div class="d-inline-flex gap-2">
+                                                        <?php if ($edit_link): ?>
+                                                            <a href="<?= $edit_link ?>" class="btn btn-sm btn-outline-primary py-1 px-2.5 rounded-2" style="font-size: 11px;"><i class="fa-solid fa-pen-to-square"></i> Lihat/Edit</a>
+                                                        <?php endif; ?>
+                                                        <form action="revisions/resolve.php" method="POST" class="d-inline" onsubmit="return confirm('Tandai revisi ini sebagai selesai?')">
+                                                            <input type="hidden" name="id" value="<?= (int) $rev['id'] ?>">
+                                                            <input type="hidden" name="redirect" value="dashboard">
+                                                            <button type="submit" class="btn btn-sm btn-success py-1 px-2.5 rounded-2 text-white" style="background-color: #1acc8d; border-color: #1acc8d; font-size: 11px;"><i class="fa-solid fa-check"></i> Tandai Selesai</button>
+                                                        </form>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <?php endif; ?>
+
             <!-- Welcome Board / Info Card -->
-            <div class="card border-0 rounded-4 shadow-sm p-4 text-white" style="background: linear-gradient(135deg, #1acc8d, #15b37b);">
+            <div class="card border-0 rounded-4 shadow-sm p-4 text-white" style="background: linear-gradient(135deg, #1acc8d, #15b37b) !important; border: none !important;">
                 <div class="row align-items-center">
                     <div class="col-md-8">
                         <h4 class="fw-bold mb-2">Panel Administrasi <span class="brand-font">SDIT Al Fatah</span></h4>

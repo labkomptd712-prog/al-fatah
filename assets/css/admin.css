@@ -1,10 +1,45 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
+:root {
+    --bg-color: #f3f4f6;
+    --text-color: #1e293b;
+    --text-secondary: #64748b;
+    --text-muted: #64748b;
+    --card-bg: #ffffff;
+    --border-color: #e2e8f0;
+    --hover-bg: #f8fafc;
+    --sidebar-bg: #0f172a;
+    --sidebar-text: rgba(255, 255, 255, 0.6);
+    --header-border: #e5e7eb;
+}
+
+[data-theme="dark"] {
+    --bg-color: #0f172a;
+    --text-color: #e2e8f0;
+    --text-secondary: #94a3b8;
+    --text-muted: #94a3b8;
+    --card-bg: #1e2436;
+    --border-color: #2d3548;
+    --hover-bg: #1a1f2e;
+    --sidebar-bg: #0b0f19;
+    --sidebar-text: rgba(226, 232, 240, 0.7);
+    --header-border: #2d3548;
+}
+
+html, body {
+    overflow-x: hidden !important;
+    max-width: 100vw !important;
+}
+
 body {
     font-family: 'Poppins', sans-serif;
-    background-color: #f3f4f6;
-    color: #333;
+    background-color: var(--bg-color);
+    color: var(--text-color);
     overflow-x: hidden;
+}
+
+* {
+    box-sizing: border-box;
 }
 
 /* Admin wrapper layout */
@@ -64,6 +99,7 @@ body {
     padding: 30px;
     min-height: 100vh;
     transition: margin-left 0.3s ease;
+    min-width: 0;
 }
 
 .main-header {
@@ -112,7 +148,7 @@ body {
 
 /* Tables */
 .table-custom {
-    background: #fff;
+    background: var(--card-bg);
     border-radius: 16px;
     overflow: hidden;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
@@ -202,9 +238,61 @@ body {
         width: 100% !important;
     }
 
-    /* 2. Main content margins */
+    /* 2. Main content margins & Sidebar Overlay on Mobile */
+    .admin-container {
+        flex-direction: column !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+        overflow-x: hidden !important;
+    }
+    
+    .mobile-admin-header {
+        width: 100% !important;
+        max-width: 100vw !important;
+        margin: 0 !important;
+        flex-shrink: 0 !important;
+    }
+
+    .sidebar {
+        position: fixed !important;
+        top: 0 !important;
+        left: -280px !important;
+        width: 260px !important;
+        height: 100vh !important;
+        z-index: 9999 !important;
+        transition: left 0.3s ease !important;
+        margin: 0 !important;
+        background-color: var(--sidebar-bg) !important;
+    }
+    
+    .sidebar.open,
+    .sidebar.active,
+    .sidebar.show {
+        left: 0 !important;
+    }
+
+    body.sidebar-collapsed .sidebar {
+        position: fixed !important;
+        top: 0 !important;
+        left: -280px !important;
+        width: 260px !important;
+        height: 100vh !important;
+        z-index: 9999 !important;
+        transition: left 0.3s ease !important;
+        margin: 0 !important;
+    }
+    
+    body.sidebar-collapsed .sidebar.open,
+    body.sidebar-collapsed .sidebar.active,
+    body.sidebar-collapsed .sidebar.show {
+        left: 0 !important;
+    }
+
+    body.sidebar-collapsed .main-content,
     .main-content {
         margin-left: 0 !important;
+        width: 100vw !important;
+        max-width: 100vw !important;
         padding: 20px 15px !important;
     }
 
@@ -267,6 +355,340 @@ body {
         min-width: 38px;
         min-height: 38px;
     }
+
+    /* 7. Form column stacks & full-width action buttons */
+    .main-content form .d-flex.gap-2,
+    .main-content form .d-flex.gap-3 {
+        flex-direction: column !important;
+        align-items: stretch !important;
+    }
+    
+    .main-content form .btn {
+        width: 100% !important;
+    }
+    
+    .main-content .card {
+        padding: 16px 20px !important; /* more compact card padding on mobile */
+    }
+
+    /* Center photo crop widget in mobile */
+    .main-content form .d-flex.align-items-center.gap-3 {
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+    }
+
+    /* 8. Mobile Font Sizes & Element Compacting Overrides */
+    h1, .page-title, .main-header h4 { font-size: 20px !important; }
+    h2 { font-size: 18px !important; }
+    p, .subtitle, .main-header p { font-size: 13px !important; }
+
+    /* Tombol */
+    .btn, button { 
+        font-size: 14px !important; 
+        padding: 10px 16px !important; 
+    }
+
+    /* Card & Container */
+    .card, .content-card, .main-content .card, .main-content .card-stat { 
+        padding: 14px !important; 
+        border-radius: 10px !important;
+    }
+
+    /* Form input */
+    input, select, textarea, .form-control, .form-select {
+        font-size: 14px !important;
+        padding: 10px 12px !important;
+    }
+
+    /* Tabel */
+    table, .table, .table-custom { font-size: 13px !important; }
+    table th, table td, .table-custom th, .table-custom td { padding: 8px 10px !important; }
+
+    /* Icon foto di tabel */
+    .table img, .table-photo-icon, .table-custom img {
+        width: 40px !important;
+        height: 40px !important;
+    }
+    
+    /* Section padding & margins */
+    .main-content {
+        padding: 16px !important;
+    }
+    .main-header {
+        margin-bottom: 16px !important;
+    }
+    
+    /* Grid statistik dashboard: 2 columns with small gap */
+    .row.g-4.mb-5 {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
+        width: 100% !important;
+    }
+    .row.g-4.mb-5 > div {
+        min-width: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    .row.g-4.mb-5 .card,
+    .row.g-4.mb-5 .card-stat {
+        padding: 0 !important;
+        overflow: hidden !important;
+    }
+    .row.g-4.mb-5 .card-body {
+        padding: 12px 14px !important;
+    }
+    .row.g-4.mb-5 .card-footer {
+        padding: 8px 14px !important;
+    }
+    .row.g-4.mb-5 .card-stat-icon {
+        width: 42px !important;
+        height: 42px !important;
+        font-size: 16px !important;
+        margin-right: 12px !important;
+        border-radius: 8px !important;
+    }
+    .row.g-4.mb-5 .card h3,
+    .row.g-4.mb-5 .card-stat h3 {
+        font-size: 18px !important;
+    }
+    .row.g-4.mb-5 .card h5,
+    .row.g-4.mb-5 .card-stat h5 {
+        font-size: 16px !important;
+    }
+    .row.g-4.mb-5 .card h6,
+    .row.g-4.mb-5 .card-stat h6 {
+        font-size: 10px !important;
+        letter-spacing: 0.2px !important;
+        margin-bottom: 2px !important;
+    }
+    .row.g-4.mb-5 .col-4 {
+        padding: 0 4px !important;
+    }
+
+    /* Theme Toggle Shape Fix */
+    .dark-mode-toggle {
+        width: 40px !important;
+        height: 40px !important;
+        padding: 0 !important;
+        min-width: 40px !important;
+        max-width: 40px !important;
+        min-height: 40px !important;
+        max-height: 40px !important;
+        border-radius: 50% !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+    
+    /* Mobile Header Simplification */
+    .mobile-admin-header img,
+    .mobile-admin-header span {
+        display: none !important;
+    }
+    .mobile-admin-header {
+        padding: 10px 16px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+    }
+    
+    /* 9. Transform Tables to Stacked Cards in Mobile */
+    table, thead, tbody, th, td, tr, .table, .table-custom {
+        display: block !important;
+        width: 100% !important;
+    }
+    
+    thead tr, .table thead tr {
+        position: absolute !important;
+        top: -9999px !important;
+        left: -9999px !important;
+        display: none !important;
+    }
+    
+    tbody tr, .table tbody tr {
+        margin-bottom: 16px !important;
+        border: 1px solid var(--border-color) !important;
+        border-radius: 12px !important;
+        padding: 12px 16px !important;
+        background: var(--card-bg) !important;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02) !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    
+    tbody td, .table tbody td {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding: 10px 0 !important;
+        border: none !important;
+        border-bottom: 1px solid var(--border-color) !important;
+        background: transparent !important;
+        text-align: right !important;
+        box-sizing: border-box !important;
+    }
+    
+    tbody td:last-child, .table tbody td:last-child {
+        border-bottom: none !important;
+    }
+    
+    tbody td::before, .table tbody td::before {
+        content: attr(data-label) !important;
+        font-weight: 600 !important;
+        font-size: 13px !important;
+        color: var(--text-secondary) !important;
+        margin-right: 12px !important;
+        text-align: left !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+    }
+
+    /* Hide labels for Action, Checkboxes, and empty headers */
+    tbody td[data-label="Aksi"]::before,
+    tbody td[data-label="Actions"]::before,
+    tbody td[data-label="Pilihan"]::before,
+    tbody td[data-label=""]::before,
+    .table tbody td[data-label="Aksi"]::before,
+    .table tbody td[data-label="Actions"]::before,
+    .table tbody td[data-label="Pilihan"]::before,
+    .table tbody td[data-label=""]::before {
+        display: none !important;
+    }
+
+    tbody td[data-label="Aksi"],
+    tbody td[data-label="Actions"],
+    tbody td[data-label="Pilihan"],
+    .table tbody td[data-label="Aksi"],
+    .table tbody td[data-label="Actions"],
+    .table tbody td[data-label="Pilihan"] {
+        justify-content: center !important;
+        border-bottom: none !important;
+        padding-top: 12px !important;
+        width: 100% !important;
+    }
+
+    tbody td[data-label="Aksi"] .btn,
+    tbody td[data-label="Aksi"] a.btn,
+    .table tbody td[data-label="Aksi"] .btn,
+    .table tbody td[data-label="Aksi"] a.btn {
+        flex-grow: 1 !important;
+        text-align: center !important;
+    }
+
+    /* Keep thumbnail images small in cards */
+    .table tbody td img,
+    tbody td img {
+        max-width: 80px !important;
+        max-height: 50px !important;
+        object-fit: cover !important;
+        border-radius: 6px !important;
+    }
+
+    /* Floating Action Button (FAB) for Tambah Button */
+    .main-header a.btn-add-new,
+    .main-header button.btn-add-new,
+    .btn-add-new {
+        position: fixed !important;
+        bottom: 20px !important;
+        right: 20px !important;
+        width: 48px !important;
+        height: 48px !important;
+        min-width: 48px !important;
+        max-width: 48px !important;
+        border-radius: 50% !important;
+        padding: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-size: 20px !important;
+        z-index: 9999 !important; /* Float above everything */
+        box-shadow: 0 4px 15px rgba(26, 204, 141, 0.4) !important;
+        background-color: #1acc8d !important;
+        border-color: #1acc8d !important;
+        color: #ffffff !important;
+    }
+    
+    .btn-add-new .btn-text {
+        display: none !important;
+    }
+    
+    .btn-add-new i {
+        margin: 0 !important;
+    }
+
+    /* 10. Mobile Accordion Collapsible Cards */
+    .mobile-accordion-item {
+        background: var(--card-bg) !important;
+        color: var(--text-color) !important;
+        border: 1px solid var(--border-color) !important;
+        border-radius: 12px !important;
+        margin-bottom: 12px !important;
+        overflow: hidden;
+        display: block !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    
+    .mobile-accordion-item summary {
+        background: var(--card-bg) !important;
+        color: var(--text-color) !important;
+        cursor: pointer;
+        display: flex !important;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 16px !important;
+        list-style: none;
+        user-select: none;
+    }
+    
+    .mobile-accordion-item summary::-webkit-details-marker {
+        display: none !important;
+    }
+    
+    .mobile-accordion-item[open] summary {
+        border-bottom: 1px solid var(--border-color) !important;
+    }
+    
+    .accordion-detail {
+        padding: 16px !important;
+        background-color: var(--hover-bg) !important;
+        color: var(--text-color) !important;
+    }
+    
+    .accordion-detail p {
+        margin-bottom: 8px !important;
+        font-size: 13px !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        border-bottom: 1px dashed var(--border-color) !important;
+        padding-bottom: 6px !important;
+    }
+    
+    .accordion-detail p strong {
+        color: var(--text-secondary) !important;
+        font-weight: 500 !important;
+    }
+
+    .accordion-detail .actions {
+        display: flex !important;
+        gap: 10px !important;
+        margin-top: 15px !important;
+    }
+    
+    .accordion-detail .actions .btn,
+    .accordion-detail .actions a {
+        flex: 1 !important;
+        text-align: center !important;
+        padding: 10px !important;
+        font-size: 13px !important;
+        min-height: 40px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
 }
 
 /* Sidebar sub-menu collapsible styling */
@@ -293,3 +715,333 @@ body {
     font-weight: bold !important;
     font-style: italic !important;
 }
+
+/* ==========================================
+   MODERN UI GLOBAL STYLING OVERRIDES
+   ========================================== */
+
+/* 1. Input & Textarea */
+.form-control, 
+.form-select, 
+select, 
+input[type="text"], 
+input[type="email"], 
+input[type="password"], 
+input[type="number"], 
+input[type="file"], 
+textarea {
+    border: 1px solid var(--border-color) !important;
+    border-radius: 10px !important;
+    padding: 12px 16px !important;
+    font-size: 14px !important;
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+    transition: all 0.2s ease-in-out !important;
+    box-shadow: none !important;
+}
+
+.form-control:focus, 
+.form-select:focus, 
+select:focus,
+input:focus,
+textarea:focus {
+    border-color: #1acc8d !important;
+    box-shadow: 0 0 0 3px rgba(26, 204, 141, 0.1) !important;
+    outline: none !important;
+}
+
+/* Placeholder Styling */
+.form-control::placeholder, 
+textarea::placeholder,
+input::placeholder {
+    color: var(--text-muted) !important;
+    opacity: 1 !important;
+}
+
+/* 2. Label Form */
+label, 
+.form-label, 
+.form-group label {
+    font-family: 'Poppins', sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    color: var(--text-color) !important;
+    margin-bottom: 8px !important;
+}
+
+/* 3. Card / Container Form */
+.main-content .card, 
+.main-content .card-stat {
+    background: var(--card-bg) !important;
+    border: 1px solid var(--border-color) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03) !important;
+    padding: 28px 32px !important;
+    border-radius: 16px !important;
+    color: var(--text-color) !important;
+}
+
+.main-content .card-stat {
+    padding: 20px !important; /* Stat cards padding */
+}
+
+/* 4. Tombol Aksi */
+/* Tombol Utama */
+.btn-brand, 
+.btn-primary, 
+.btn-success {
+    background: linear-gradient(135deg, #1acc8d 0%, #15b37b 100%) !important;
+    border: none !important;
+    border-radius: 8px !important;
+    padding: 10px 20px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.2px !important;
+    transition: all 0.2s ease-in-out !important;
+    color: #ffffff !important;
+}
+
+.btn-brand:hover, 
+.btn-primary:hover, 
+.btn-success:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 14px rgba(26, 204, 141, 0.3) !important;
+    color: #ffffff !important;
+}
+
+/* Tombol Sekunder */
+.btn-outline-secondary, 
+.btn-secondary {
+    background: transparent !important;
+    border: 1.5px solid var(--border-color) !important;
+    color: var(--text-color) !important;
+    border-radius: 8px !important;
+    padding: 9px 18px !important;
+    font-weight: 500 !important;
+    transition: all 0.2s ease-in-out !important;
+}
+
+.btn-outline-secondary:hover, 
+.btn-secondary:hover {
+    background-color: var(--hover-bg) !important;
+    border-color: var(--text-muted) !important;
+    color: var(--text-color) !important;
+}
+
+/* 5. Upload File Area / Dropzone */
+.border-dashed {
+    border-style: dashed !important;
+    border-width: 2px !important;
+    border-color: #1acc8d !important;
+    background-color: var(--hover-bg) !important;
+    border-radius: 12px !important;
+    transition: all 0.2s ease-in-out !important;
+}
+
+.border-dashed:hover {
+    background-color: rgba(26, 204, 141, 0.05) !important;
+    border-color: #15b37b !important;
+}
+
+.border-dashed i {
+    font-size: 32px !important;
+    color: #1acc8d !important;
+    margin-bottom: 8px !important;
+    transition: transform 0.2s ease !important;
+}
+
+.border-dashed:hover i {
+    transform: scale(1.1) !important;
+}
+
+/* 6. Tabel Admin */
+.table-custom, 
+.table {
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    width: 100% !important;
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}
+
+.table-custom th, 
+.table th {
+    background-color: var(--hover-bg) !important;
+    color: var(--text-muted) !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    font-size: 11px !important;
+    letter-spacing: 0.8px !important;
+    border-bottom: 1.5px solid var(--border-color) !important;
+    padding: 14px 20px !important;
+}
+
+.table-custom td, 
+.table td {
+    padding: 14px 20px !important;
+    vertical-align: middle !important;
+    border-bottom: 1px solid var(--border-color) !important;
+    color: var(--text-color) !important;
+    background-color: transparent !important;
+}
+
+.table-custom tbody tr:hover, 
+.table tbody tr:hover {
+    background-color: var(--hover-bg) !important;
+}
+
+/* Badge Kategori */
+.badge {
+    border-radius: 50rem !important; /* Pill shape */
+    padding: 0.4em 0.8em !important;
+    font-weight: 600 !important;
+    font-size: 11px !important;
+    letter-spacing: 0.3px !important;
+}
+
+.bg-success {
+    background-color: rgba(26, 204, 141, 0.1) !important;
+    color: #15b37b !important;
+}
+
+.bg-primary {
+    background-color: rgba(63, 67, 253, 0.1) !important;
+    color: #3f43fd !important;
+}
+
+.bg-warning {
+    background-color: rgba(245, 158, 11, 0.1) !important;
+    color: #d97706 !important;
+}
+
+.bg-danger {
+    background-color: rgba(239, 68, 68, 0.1) !important;
+    color: #dc2626 !important;
+}
+
+/* 7. Empty State */
+.empty-state {
+    padding: 48px 24px !important;
+    text-align: center !important;
+    background: var(--card-bg) !important;
+    border-radius: 16px !important;
+    border: 1px dashed var(--border-color) !important;
+    margin-top: 15px !important;
+}
+
+.empty-state i {
+    font-size: 44px !important;
+    color: var(--text-muted) !important;
+    margin-bottom: 16px !important;
+    opacity: 0.7 !important;
+}
+
+.empty-state p {
+    color: var(--text-muted) !important;
+    font-size: 14px !important;
+}
+
+.empty-state p strong {
+    color: #1acc8d !important;
+}
+
+/* 8. Sidebar Admin transitions */
+.sidebar.bg-dark {
+    background-color: var(--sidebar-bg) !important;
+}
+
+.sidebar .nav-link {
+    transition: all 0.25s ease-in-out !important;
+    color: var(--sidebar-text) !important;
+}
+
+.sidebar .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.08) !important;
+    color: #ffffff !important;
+}
+
+.sidebar .collapse ul li a {
+    transition: all 0.2s ease-in-out !important;
+    color: var(--sidebar-text) !important;
+}
+
+.sidebar .collapse ul li a:hover {
+    background-color: rgba(255, 255, 255, 0.08) !important;
+    color: #ffffff !important;
+}
+
+.sidebar .sidebar-header h6 {
+    color: #ffffff !important;
+}
+
+.sidebar .user-info {
+    color: rgba(255, 255, 255, 0.6) !important;
+}
+
+.sidebar .user-info strong {
+    color: #ffffff !important;
+}
+
+/* 9. Dark Mode Utility Bootstrap Overrides & Global Fixes */
+[data-theme="dark"] .bg-light {
+    background-color: var(--hover-bg) !important;
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .bg-white {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .text-dark {
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .text-secondary {
+    color: var(--text-secondary) !important;
+}
+
+[data-theme="dark"] .text-muted {
+    color: var(--text-secondary) !important;
+}
+
+[data-theme="dark"] .main-header h4 {
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .main-header {
+    border-bottom-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] hr {
+    border-color: var(--border-color) !important;
+    opacity: 0.2 !important;
+}
+
+[data-theme="dark"] .alert {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .table-responsive {
+    border-color: var(--border-color) !important;
+}
+
+/* Legible colors for contextual links, tags & icons in dark mode */
+[data-theme="dark"] .text-success {
+    color: #34d399 !important; /* light emerald green */
+}
+[data-theme="dark"] .text-primary {
+    color: #60a5fa !important; /* light blue */
+}
+[data-theme="dark"] .text-warning {
+    color: #fbbf24 !important; /* light amber yellow */
+}
+[data-theme="dark"] .text-info {
+    color: #22d3ee !important; /* light cyan */
+}
+[data-theme="dark"] .text-danger {
+    color: #f87171 !important; /* light red */
+}
+
+
+

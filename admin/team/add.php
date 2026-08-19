@@ -13,6 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = trim($_POST['name'] ?? '');
     $position = trim($_POST['position'] ?? '');
     $display_order = intval($_POST['display_order'] ?? 0);
+    $photo_position = trim($_POST['photo_position'] ?? 'center');
 
     if ($name === '' || $position === '') {
         $error = "Nama dan jabatan wajib diisi!";
@@ -49,8 +50,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($error === '') {
             try {
-                $stmt = $pdo->prepare("INSERT INTO team (name, position, photo, display_order) VALUES (?, ?, ?, ?)");
-                $stmt->execute([$name, $position, $photo_name, $display_order]);
+                $stmt = $pdo->prepare("INSERT INTO team (name, position, photo, display_order, photo_position) VALUES (?, ?, ?, ?, ?)");
+                $stmt->execute([$name, $position, $photo_name, $display_order, $photo_position]);
                 if (is_editor_role()) {
                     header("Location: ../dashboard.php?msg=team_add_success");
                 } else {
@@ -105,10 +106,21 @@ $back_url = is_editor_role() ? '../dashboard.php' : 'list.php';
                         <input type="number" name="display_order" class="form-control bg-light border-0 py-2.5 rounded-3" value="<?= (int) $display_order ?>" min="0">
                         <small class="text-muted">Angka lebih kecil tampil lebih dulu.</small>
                     </div>
-                    <div class="mb-4">
+                    <div class="mb-3">
                         <label class="form-label fw-semibold text-secondary">Foto</label>
                         <input type="file" name="photo" class="form-control bg-light border-0" accept="image/*">
                         <small class="text-muted">Opsional. Maks. 2MB.</small>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold text-secondary">Posisi Fokus Foto (Crop)</label>
+                        <select name="photo_position" class="form-select bg-light border-0 py-2.5 rounded-3">
+                            <option value="center" selected>Tengah (Default)</option>
+                            <option value="top">Atas</option>
+                            <option value="bottom">Bawah</option>
+                            <option value="left">Kiri</option>
+                            <option value="right">Kanan</option>
+                        </select>
+                        <small class="text-muted">Mengatur posisi fokus perataan gambar (object-position).</small>
                     </div>
                     <button type="submit" class="btn btn-brand w-100 py-2.5 rounded-3 fw-bold"><i class="fa-solid fa-floppy-disk me-2"></i> Simpan</button>
                 </form>

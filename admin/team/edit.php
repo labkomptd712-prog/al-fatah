@@ -23,11 +23,13 @@ $name = $member['name'];
 $position = $member['position'];
 $display_order = (int) $member['display_order'];
 $existing_photo = $member['photo'];
+$photo_position = $member['photo_position'] ?? 'center';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = trim($_POST['name'] ?? '');
     $position = trim($_POST['position'] ?? '');
     $display_order = intval($_POST['display_order'] ?? 0);
+    $photo_position = trim($_POST['photo_position'] ?? 'center');
 
     if ($name === '' || $position === '') {
         $error = "Nama dan jabatan wajib diisi!";
@@ -63,8 +65,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($error === '') {
             try {
-                $stmt = $pdo->prepare("UPDATE team SET name = ?, position = ?, photo = ?, display_order = ? WHERE id = ?");
-                $stmt->execute([$name, $position, $photo_name, $display_order, $id]);
+                $stmt = $pdo->prepare("UPDATE team SET name = ?, position = ?, photo = ?, display_order = ?, photo_position = ? WHERE id = ?");
+                $stmt->execute([$name, $position, $photo_name, $display_order, $photo_position, $id]);
                 header("Location: list.php?msg=edit_success");
                 exit();
             } catch (PDOException $e) {
@@ -111,13 +113,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <label class="form-label fw-semibold text-secondary">Urutan Tampil</label>
                         <input type="number" name="display_order" class="form-control bg-light border-0 py-2.5 rounded-3" value="<?= (int) $display_order ?>" min="0">
                     </div>
-                    <div class="mb-4">
+                    <div class="mb-3">
                         <label class="form-label fw-semibold text-secondary">Foto</label>
                         <?php if (!empty($existing_photo) && file_exists('../uploads/' . $existing_photo)): ?>
                             <div class="mb-2"><img src="../uploads/<?= htmlspecialchars($existing_photo) ?>" alt="" style="height:80px;border-radius:8px;object-fit:cover;"></div>
                         <?php endif; ?>
                         <input type="file" name="photo" class="form-control bg-light border-0" accept="image/*">
                         <small class="text-muted">Kosongkan jika tidak ingin mengganti foto.</small>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold text-secondary">Posisi Fokus Foto (Crop)</label>
+                        <select name="photo_position" class="form-select bg-light border-0 py-2.5 rounded-3">
+                            <option value="center" <?= $photo_position === 'center' ? 'selected' : '' ?>>Tengah (Default)</option>
+                            <option value="top" <?= $photo_position === 'top' ? 'selected' : '' ?>>Atas</option>
+                            <option value="bottom" <?= $photo_position === 'bottom' ? 'selected' : '' ?>>Bawah</option>
+                            <option value="left" <?= $photo_position === 'left' ? 'selected' : '' ?>>Kiri</option>
+                            <option value="right" <?= $photo_position === 'right' ? 'selected' : '' ?>>Kanan</option>
+                        </select>
+                        <small class="text-muted">Mengatur posisi fokus perataan gambar (object-position).</small>
                     </div>
                     <button type="submit" class="btn btn-brand w-100 py-2.5 rounded-3 fw-bold"><i class="fa-solid fa-floppy-disk me-2"></i> Simpan Perubahan</button>
                 </form>
