@@ -15,9 +15,9 @@ if ($id <= 0) {
     exit();
 }
 
-try {
+try { $stmtSelect = $pdo->prepare("SELECT name, subject FROM contact_messages WHERE id = ?"); $stmtSelect->execute([$id]); $msg = $stmtSelect->fetch(); $nameVal = $msg ? ($msg['name'] ?: 'Unknown') : 'Unknown'; $subjectVal = $msg ? ($msg['subject'] ?: 'No Subject') : 'No Subject';
     $stmt = $pdo->prepare("DELETE FROM contact_messages WHERE id = ?");
-    $stmt->execute([$id]);
+    $stmt->execute([$id]); logActivity($_SESSION['admin_id'], 'delete', 'pesan masuk', $subjectVal, "Menghapus pesan dari '{$nameVal}' dengan subjek '{$subjectVal}'");
     
     header("Location: list.php?msg=delete_success");
     exit();

@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         // Fetch the photo filename first
-        $stmt = $pdo->prepare("SELECT foto FROM prestasi WHERE id = ?");
+        $stmt = $pdo->prepare("SELECT foto, nama_siswa FROM prestasi WHERE id = ?");
         $stmt->execute([$id]);
         $photo = $stmt->fetch();
 
@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Delete from database
             $delete_stmt = $pdo->prepare("DELETE FROM prestasi WHERE id = ?");
-            $delete_stmt->execute([$id]);
+            $delete_stmt->execute([$id]); logActivity($_SESSION['admin_id'], 'delete', 'prestasi', $photo['nama_siswa'], "Menghapus prestasi siswa '{$photo['nama_siswa']}'");
 
             header("Location: list.php?msg=delete_success");
             exit();

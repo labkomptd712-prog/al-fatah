@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         // Fetch the photo filename first
-        $stmt = $pdo->prepare("SELECT image FROM gallery WHERE id = ?");
+        $stmt = $pdo->prepare("SELECT image, caption FROM gallery WHERE id = ?");
         $stmt->execute([$id]);
         $photo = $stmt->fetch();
 
@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Delete from database
             $delete_stmt = $pdo->prepare("DELETE FROM gallery WHERE id = ?");
-            $delete_stmt->execute([$id]);
+            $delete_stmt->execute([$id]); logActivity($_SESSION['admin_id'], 'delete', 'galeri', $photo['caption'] ?: 'Foto Galeri', "Menghapus foto galeri");
 
             header("Location: list.php?msg=delete_success");
             exit();

@@ -96,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (empty($error)) {
                 try {
                     $stmtUpdate = $pdo->prepare("UPDATE gallery_categories SET name = ?, slug = ?, cover_image = ? WHERE id = ?");
-                    $stmtUpdate->execute([$name, $slug, $cover_name, $id]);
+                    $stmtUpdate->execute([$name, $slug, $cover_name, $id]); logActivity($_SESSION['admin_id'], 'update', 'kategori galeri', $name, "Mengubah kategori galeri '{$name}'");
                     header("Location: list.php?msg=edit_success");
                     exit();
                 } catch (PDOException $e) {

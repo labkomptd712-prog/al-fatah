@@ -66,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($error === '') {
             try {
                 $stmt = $pdo->prepare("UPDATE team SET name = ?, position = ?, photo = ?, display_order = ?, photo_position = ? WHERE id = ?");
-                $stmt->execute([$name, $position, $photo_name, $display_order, $photo_position, $id]);
+                $stmt->execute([$name, $position, $photo_name, $display_order, $photo_position, $id]); logActivity($_SESSION['admin_id'], 'update', 'guru & staff', $name, "Mengubah data guru/staff '{$name}'");
                 header("Location: list.php?msg=edit_success");
                 exit();
             } catch (PDOException $e) {

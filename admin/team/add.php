@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($error === '') {
             try {
                 $stmt = $pdo->prepare("INSERT INTO team (name, position, photo, display_order, photo_position) VALUES (?, ?, ?, ?, ?)");
-                $stmt->execute([$name, $position, $photo_name, $display_order, $photo_position]);
+                $stmt->execute([$name, $position, $photo_name, $display_order, $photo_position]); logActivity($_SESSION['admin_id'], 'create', 'guru & staff', $name, "Menambahkan guru/staff baru '{$name}'");
                 if (is_editor_role()) {
                     header("Location: ../dashboard.php?msg=team_add_success");
                 } else {

@@ -39,6 +39,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['admin_username'] = $admin['username'];
                 $_SESSION['admin_role'] = $admin['role'] ?? 'admin';
                 
+                require_once __DIR__ . '/includes/activity_logger.php';
+                logActivity($admin['id'], 'login', 'admin', $admin['username'], "Admin '{$admin['username']}' berhasil login");
+                
                 header("Location: dashboard.php");
                 exit();
             } else {

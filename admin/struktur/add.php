@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $person_name_val = ($person_name === '') ? null : $person_name;
         try {
             $stmt = $pdo->prepare("INSERT INTO org_structure (position_title, person_name, display_order) VALUES (?, ?, ?)");
-            $stmt->execute([$position_title, $person_name_val, $display_order]);
+            $stmt->execute([$position_title, $person_name_val, $display_order]); logActivity($_SESSION['admin_id'], 'create', 'struktur organisasi', $person_name_val ?: $position_title, "Menambahkan anggota struktur organisasi baru '" . ($person_name_val ?: $position_title) . "' sebagai '{$position_title}'");
             header("Location: list.php?msg=add_success");
             exit();
         } catch (PDOException $e) {

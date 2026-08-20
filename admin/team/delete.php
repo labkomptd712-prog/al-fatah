@@ -23,7 +23,7 @@ try {
         if (!empty($row['photo']) && file_exists('../uploads/' . $row['photo'])) {
             @unlink('../uploads/' . $row['photo']);
         }
-        $pdo->prepare("DELETE FROM team WHERE id = ?")->execute([$id]);
+        $pdo->prepare("DELETE FROM team WHERE id = ?")->execute([$id]); logActivity($_SESSION['admin_id'], 'delete', 'guru & staff', $row['name'], "Menghapus guru/staff '{$row['name']}'");
         header("Location: list.php?msg=delete_success");
         exit();
     }

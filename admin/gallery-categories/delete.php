@@ -48,7 +48,7 @@ try {
         
         // Hapus kategori dari database
         $stmtDelete = $pdo->prepare("DELETE FROM gallery_categories WHERE id = ?");
-        $stmtDelete->execute([$id]);
+        $stmtDelete->execute([$id]); logActivity($_SESSION['admin_id'], 'delete', 'kategori galeri', $cat['name'], "Menghapus kategori galeri '{$cat['name']}'");
         
         header("Location: list.php?msg=delete_success");
         exit();

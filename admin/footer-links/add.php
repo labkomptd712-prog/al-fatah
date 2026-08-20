@@ -69,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($error_msg === '') {
             try {
                 $stmt = $pdo->prepare("INSERT INTO footer_links (category, title, file_path, external_url, display_order) VALUES (?, ?, ?, ?, ?)");
-                $stmt->execute([$category, $title, $file_path, $db_external_url, $display_order]);
+                $stmt->execute([$category, $title, $file_path, $db_external_url, $display_order]); logActivity($_SESSION['admin_id'], 'create', 'tautan footer', $title, "Menambahkan tautan footer baru '{$title}'");
                 header("Location: list.php?msg=add_success");
                 exit();
             } catch (PDOException $e) {

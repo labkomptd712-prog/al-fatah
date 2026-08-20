@@ -48,7 +48,7 @@ try {
         
         // Hapus kategori dari database
         $stmtDelete = $pdo->prepare("DELETE FROM facility_categories WHERE id = ?");
-        $stmtDelete->execute([$id]);
+        $stmtDelete->execute([$id]); logActivity($_SESSION['admin_id'], 'delete', 'kategori fasilitas', $cat['name'], "Menghapus kategori fasilitas '{$cat['name']}'");
         
         header("Location: list.php?msg=delete_success");
         exit();

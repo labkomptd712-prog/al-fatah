@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Delete from database
             $delete_stmt = $pdo->prepare("DELETE FROM news WHERE id = ?");
-            $delete_stmt->execute([$id]);
+            $delete_stmt->execute([$id]); logActivity($_SESSION['admin_id'], 'delete', 'berita', $news['title'], "Menghapus berita '{$news['title']}'");
 
             header("Location: list.php?msg=delete_success");
             exit();

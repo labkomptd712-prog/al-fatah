@@ -79,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Insert into news table
                 $created_by = (int) ($_SESSION['admin_id'] ?? 0);
                 $stmt = $pdo->prepare("INSERT INTO news (title, slug, content, image, status, created_by) VALUES (?, ?, ?, ?, ?, ?)");
-                $stmt->execute([$title, $slug, $content, $image_name, $status, $created_by]);
+                $stmt->execute([$title, $slug, $content, $image_name, $status, $created_by]); logActivity($_SESSION['admin_id'], 'create', 'berita', $title, "Menambahkan berita baru '{$title}'");
 
                 if (is_editor_role()) {
                     header("Location: ../dashboard.php?msg=news_submit_success");

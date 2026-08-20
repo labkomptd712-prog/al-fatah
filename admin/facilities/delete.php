@@ -41,7 +41,7 @@ try {
         
         // Hapus data dari database
         $stmtDelete = $pdo->prepare("DELETE FROM facilities WHERE id = ?");
-        $stmtDelete->execute([$id]);
+        $stmtDelete->execute([$id]); logActivity($_SESSION['admin_id'], 'delete', 'fasilitas', $fac['name'], "Menghapus fasilitas '{$fac['name']}'");
         
         header("Location: list.php?msg=delete_success");
         exit();

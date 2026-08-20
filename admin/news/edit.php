@@ -98,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 // Update database
                 $stmt = $pdo->prepare("UPDATE news SET title = ?, slug = ?, content = ?, image = ?, status = ? WHERE id = ?");
-                $stmt->execute([$title, $slug, $content, $image_name, $status, $id]);
+                $stmt->execute([$title, $slug, $content, $image_name, $status, $id]); logActivity($_SESSION['admin_id'], 'update', 'berita', $title, "Mengubah berita '{$title}'");
 
                 header("Location: list.php?msg=edit_success");
                 exit();

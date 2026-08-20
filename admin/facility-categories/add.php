@@ -70,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (empty($error)) {
                 try {
                     $stmt = $pdo->prepare("INSERT INTO facility_categories (name, slug, cover_image) VALUES (?, ?, ?)");
-                    $stmt->execute([$name, $slug, $cover_name]);
+                    $stmt->execute([$name, $slug, $cover_name]); logActivity($_SESSION['admin_id'], 'create', 'kategori fasilitas', $name, "Menambahkan kategori fasilitas baru '{$name}'");
                     header("Location: list.php?msg=add_success");
                     exit();
                 } catch (PDOException $e) {

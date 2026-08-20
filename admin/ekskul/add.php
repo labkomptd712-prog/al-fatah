@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     if (move_uploaded_file($file_tmp, '../uploads/' . $image_name)) {
                         try {
                             $stmt = $pdo->prepare("INSERT INTO ekskul_photos (caption, image, category_id) VALUES (?, ?, ?)");
-                            $stmt->execute([$caption, $image_name, $category_id]);
+                            $stmt->execute([$caption, $image_name, $category_id]); logActivity($_SESSION['admin_id'], 'create', 'ekskul', $caption ?: 'Foto Ekskul', "Mengunggah foto ekskul baru" . ($caption ? " dengan caption '{$caption}'" : ""));
                             if (is_editor_role()) {
                                 header("Location: ../dashboard.php?msg=ekskul_add_success");
                             } else {

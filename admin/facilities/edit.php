@@ -90,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (empty($error)) {
             try {
                 $stmtUpdate = $pdo->prepare("UPDATE facilities SET category_id = ?, name = ?, description = ?, image = ?, display_order = ? WHERE id = ?");
-                $stmtUpdate->execute([$category_id, $name, $description, $image_name, $display_order, $id]);
+                $stmtUpdate->execute([$category_id, $name, $description, $image_name, $display_order, $id]); logActivity($_SESSION['admin_id'], 'update', 'fasilitas', $name, "Mengubah fasilitas '{$name}'");
                 header("Location: list.php?msg=edit_success");
                 exit();
             } catch (PDOException $e) {

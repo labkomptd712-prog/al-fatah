@@ -17,7 +17,7 @@ if ($id <= 0) {
 
 try {
     // Ambil info foto terlebih dahulu untuk dihapus dari server
-    $stmtSelect = $pdo->prepare("SELECT photo FROM testimonials WHERE id = ?");
+    $stmtSelect = $pdo->prepare("SELECT photo, name FROM testimonials WHERE id = ?");
     $stmtSelect->execute([$id]);
     $t = $stmtSelect->fetch();
     
@@ -29,7 +29,7 @@ try {
         
         // Hapus record dari database
         $stmtDelete = $pdo->prepare("DELETE FROM testimonials WHERE id = ?");
-        $stmtDelete->execute([$id]);
+        $stmtDelete->execute([$id]); logActivity($_SESSION['admin_id'], 'delete', 'alumni & testimoni', $t['name'], "Menghapus testimoni alumni '{$t['name']}'");
         
         header("Location: list.php?msg=delete_success");
         exit();

@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $student_count = ($student_count_raw === '') ? null : (int) $student_count_raw;
         try {
             $stmt = $pdo->prepare("INSERT INTO classes (class_name, wali_kelas, student_count) VALUES (?, ?, ?)");
-            $stmt->execute([$class_name, $wali_kelas, $student_count]);
+            $stmt->execute([$class_name, $wali_kelas, $student_count]); logActivity($_SESSION['admin_id'], 'create', 'kelas', $class_name, "Menambahkan kelas baru '{$class_name}'");
             header("Location: list.php?msg=add_success");
             exit();
         } catch (PDOException $e) {

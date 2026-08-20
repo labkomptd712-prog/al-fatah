@@ -350,6 +350,19 @@ try {
       FOREIGN KEY (requested_by) REFERENCES admins(id) ON DELETE CASCADE
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
 
+    // CREATE TABLE activity_logs
+    $pdo->exec("CREATE TABLE IF NOT EXISTS activity_logs (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      admin_id INT NOT NULL,
+      admin_username VARCHAR(100) NOT NULL,
+      action_type ENUM('create','update','delete','login') NOT NULL,
+      module_name VARCHAR(50) NOT NULL,
+      item_title VARCHAR(255),
+      description TEXT,
+      ip_address VARCHAR(45),
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
     // Seed dummy kepala sekolah account (username: kepsek, role: kepsek)
     $stmtKepsek = $pdo->prepare("SELECT COUNT(*) FROM admins WHERE username = 'kepsek'");
     $stmtKepsek->execute();

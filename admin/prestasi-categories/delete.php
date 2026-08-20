@@ -50,7 +50,7 @@ try {
     
     // Hapus record kategori
     $stmtDelete = $pdo->prepare("DELETE FROM prestasi_categories WHERE id = ?");
-    $stmtDelete->execute([$id]);
+    $stmtDelete->execute([$id]); logActivity($_SESSION['admin_id'], 'delete', 'kategori prestasi', $cat['name'], "Menghapus kategori prestasi '{$cat['name']}'");
     
     header("Location: list.php?msg=delete_success");
     exit();

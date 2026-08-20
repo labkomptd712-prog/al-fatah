@@ -19,14 +19,14 @@ if ($id <= 0) {
 
 try {
     // Cari berita berdasarkan ID
-    $stmt = $pdo->prepare("SELECT id FROM news WHERE id = ?");
+    $stmt = $pdo->prepare("SELECT id, title FROM news WHERE id = ?");
     $stmt->execute([$id]);
     $news = $stmt->fetch();
 
     if ($news) {
         // Update status berita menjadi published
         $stmtUpdate = $pdo->prepare("UPDATE news SET status = 'published' WHERE id = ?");
-        $stmtUpdate->execute([$id]);
+        $stmtUpdate->execute([$id]); logActivity($_SESSION['admin_id'], 'update', 'berita', $news['title'], "Menyetujui berita '{$news['title']}'");
         
         header("Location: list.php?msg=approve_success");
         exit();

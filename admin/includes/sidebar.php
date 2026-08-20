@@ -18,11 +18,16 @@ $is_superadmin = ($role === 'superadmin');
 $is_kepsek = ($role === 'kepsek');
 
 $unread_messages = 0;
+$pending_news_count = 0;
+$pending_revisinya_count = 0;
+
 if ($is_admin) {
     try {
         $unread_messages = (int) $pdo->query("SELECT COUNT(*) FROM contact_messages WHERE is_read = 0")->fetchColumn();
+        $pending_news_count = (int) $pdo->query("SELECT COUNT(*) FROM news WHERE status = 'pending'")->fetchColumn();
+        $pending_revisinya_count = (int) $pdo->query("SELECT COUNT(*) FROM revision_requests WHERE status = 'pending'")->fetchColumn();
     } catch (PDOException $e) {
-        $unread_messages = 0;
+        // Fail silently
     }
 }
 ?>
@@ -379,6 +384,18 @@ body.sidebar-collapsed .sidebar .collapse {
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     color: #ffffff !important;
 }
+.badge-notif {
+    background: #ef4444;
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 10px;
+    margin-left: 8px;
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 1;
+}
 </style>
 
 <!-- Mobile Header Bar (Only visible on screens < 768px) -->
@@ -419,6 +436,15 @@ body.sidebar-collapsed .sidebar .collapse {
                 <i class="fa-solid fa-gauge-high me-2"></i> <span>Dashboard</span>
             </a>
         </li>
+        
+        <?php if ($is_admin): ?>
+        <li class="nav-item">
+            <a href="<?= $base_admin ?>messages/list.php" class="nav-link text-white <?= (strpos($script_name, '/messages/') !== false) ? 'active bg-success' : '' ?>">
+                <i class="fa-solid fa-envelope me-2"></i> <span>Pesan Masuk</span>
+                <span class="badge-notif ms-auto <?= ($unread_messages > 0) ? '' : 'd-none' ?>" id="badge-messages"><?= $unread_messages ?></span>
+            </a>
+        </li>
+        <?php endif; ?>
 
         <!-- Kategori 1: Kelola Konten -->
         <li class="nav-item mt-2">
@@ -432,6 +458,7 @@ body.sidebar-collapsed .sidebar .collapse {
                     <li>
                         <a href="<?= $base_admin ?>news/list.php" class="nav-link text-white-50 <?= (strpos($script_name, '/news/') !== false && strpos($script_name, 'riwayat') === false) ? 'active text-white bg-success' : '' ?>">
                             <i class="fa-solid fa-newspaper me-2"></i> <span>Berita Terbaru</span>
+                            <span class="badge-notif ms-auto <?= ($pending_news_count > 0) ? '' : 'd-none' ?>" id="badge-news"><?= $pending_news_count ?></span>
                         </a>
                     </li>
                     <li>
@@ -549,6 +576,14 @@ body.sidebar-collapsed .sidebar .collapse {
         <li class="nav-item mt-2">
             <a href="<?= $base_admin ?>revisions/list.php" class="nav-link text-white <?= (strpos($script_name, '/revisions/') !== false) ? 'active bg-success' : '' ?>">
                 <i class="fa-solid fa-comments me-2"></i> <span>Revisi Kepsek</span>
+                <span class="badge-notif ms-auto <?= ($pending_revisinya_count > 0) ? '' : 'd-none' ?>" id="badge-revisi"><?= $pending_revisinya_count ?></span>
+            </a>
+        </li>
+        
+        <!-- Riwayat Aktivitas Nav Link -->
+        <li class="nav-item mt-2">
+            <a href="<?= $base_admin ?>activity-log/list.php" class="nav-link text-white <?= (strpos($script_name, '/activity-log/') !== false) ? 'active bg-success' : '' ?>">
+                <i class="fa-solid fa-clock-rotate-left me-2"></i> <span>Riwayat Aktivitas</span>
             </a>
         </li>
 
@@ -1015,6 +1050,36 @@ document.addEventListener('DOMContentLoaded', function() {
             };
         });
     }
+
+    <?php if ($is_admin): ?>
+    // 5. Polling for real-time notification counts every 30 seconds
+    setInterval(async () => {
+        try {
+            const res = await fetch('<?= $base_admin ?>api/notification-count.php');
+            if (res.ok) {
+                const data = await res.json();
+                
+                const updateBadge = (id, count) => {
+                    const badge = document.getElementById(id);
+                    if (badge) {
+                        badge.textContent = count;
+                        if (count > 0) {
+                            badge.classList.remove('d-none');
+                        } else {
+                            badge.classList.add('d-none');
+                        }
+                    }
+                };
+                
+                updateBadge('badge-messages', data.unread_messages);
+                updateBadge('badge-news', data.pending_news);
+                updateBadge('badge-revisi', data.pending_revisi);
+            }
+        } catch (e) {
+            // fail silently
+        }
+    }, 30000);
+    <?php endif; ?>
 });
 </script>
 <?php endif; ?>

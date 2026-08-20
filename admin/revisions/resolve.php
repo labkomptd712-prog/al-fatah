@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
-        $stmt = $pdo->prepare("UPDATE revision_requests SET status = 'selesai', resolved_at = CURRENT_TIMESTAMP WHERE id = ?");
+        $stmtTitle = $pdo->prepare("SELECT item_title, module_name FROM revision_requests WHERE id = ?"); $stmtTitle->execute([$id]); $rev = $stmtTitle->fetch(); if ($rev) { logActivity($_SESSION['admin_id'], 'update', 'revisi', $rev['item_title'], "Menyelesaikan revisi Kepsek untuk modul {$rev['module_name']} '{$rev['item_title']}'"); } $stmt = $pdo->prepare("UPDATE revision_requests SET status = 'selesai', resolved_at = CURRENT_TIMESTAMP WHERE id = ?");
         $stmt->execute([$id]);
 
         $msg = "Revisi berhasil ditandai selesai!";

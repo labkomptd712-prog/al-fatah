@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 $hash = password_hash($password, PASSWORD_DEFAULT);
                 $stmt = $pdo->prepare("INSERT INTO admins (username, password, role) VALUES (?, ?, ?)");
-                $stmt->execute([$username, $hash, $role]);
+                $stmt->execute([$username, $hash, $role]); logActivity($_SESSION['admin_id'], 'create', 'admin', $username, "Menambahkan admin baru '{$username}'");
                 header("Location: list.php?msg=add_success");
                 exit();
             }

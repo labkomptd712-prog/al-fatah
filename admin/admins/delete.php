@@ -23,14 +23,14 @@ if ($id === $current_admin_id) {
 }
 
 try {
-    $stmt = $pdo->prepare("SELECT id FROM admins WHERE id = ?");
+    $stmt = $pdo->prepare("SELECT id, username FROM admins WHERE id = ?");
     $stmt->execute([$id]);
-    if (!$stmt->fetch()) {
+    $admin = $stmt->fetch(); if (!$admin) {
         header("Location: list.php?err=" . urlencode("Akun tidak ditemukan."));
         exit();
     }
 
-    $pdo->prepare("DELETE FROM admins WHERE id = ?")->execute([$id]);
+    $username = $admin['username']; $pdo->prepare("DELETE FROM admins WHERE id = ?")->execute([$id]); logActivity($_SESSION['admin_id'], 'delete', 'admin', $username, "Menghapus admin '{$username}'");
     header("Location: list.php?msg=delete_success");
 } catch (PDOException $e) {
     header("Location: list.php?err=" . urlencode($e->getMessage()));

@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     if (move_uploaded_file($file_tmp, '../uploads/' . $image_name)) {
                         try {
                             $stmt = $pdo->prepare("INSERT INTO gallery (caption, image) VALUES (?, ?)");
-                            $stmt->execute([$caption, $image_name]);
+                            $stmt->execute([$caption, $image_name]); logActivity($_SESSION['admin_id'], 'create', 'galeri', $caption ?: 'Foto Galeri', "Mengunggah foto galeri baru" . ($caption ? " dengan caption '{$caption}'" : ""));
                             if (is_editor_role()) {
                                 header("Location: ../dashboard.php?msg=gallery_add_success");
                             } else {

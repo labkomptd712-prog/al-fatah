@@ -50,7 +50,7 @@ try {
     
     // Hapus record kategori
     $stmtDelete = $pdo->prepare("DELETE FROM ekskul_categories WHERE id = ?");
-    $stmtDelete->execute([$id]);
+    $stmtDelete->execute([$id]); logActivity($_SESSION['admin_id'], 'delete', 'kategori ekskul', $cat['name'], "Menghapus kategori ekskul '{$cat['name']}'");
     
     header("Location: list.php?msg=delete_success");
     exit();

@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (empty($error)) {
                 try {
                     $stmt = $pdo->prepare("INSERT INTO ekskul_categories (name, slug, cover_image) VALUES (?, ?, ?)");
-                    $stmt->execute([$name, $slug, $cover_image]);
+                    $stmt->execute([$name, $slug, $cover_image]); logActivity($_SESSION['admin_id'], 'create', 'kategori ekskul', $name, "Menambahkan kategori ekskul baru '{$name}'");
                     header("Location: list.php?msg=add_success");
                     exit();
                 } catch (PDOException $e) {

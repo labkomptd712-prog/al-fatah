@@ -17,8 +17,8 @@ if ($id <= 0) {
 
 try {
     // Delete from database
-    $stmt = $pdo->prepare("DELETE FROM org_structure WHERE id = ?");
-    $stmt->execute([$id]);
+    $stmtSelect = $pdo->prepare("SELECT person_name, position_title FROM org_structure WHERE id = ?"); $stmtSelect->execute([$id]); $slot = $stmtSelect->fetch(); $personName = $slot ? ($slot['person_name'] ?: $slot['position_title']) : ''; $stmt = $pdo->prepare("DELETE FROM org_structure WHERE id = ?");
+    $stmt->execute([$id]); logActivity($_SESSION['admin_id'], 'delete', 'struktur organisasi', $personName, "Menghapus anggota struktur organisasi '{$personName}'");
 
     header("Location: list.php?msg=delete_success");
     exit();

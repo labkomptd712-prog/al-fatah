@@ -12,7 +12,7 @@ if ($id <= 0) {
 
 try {
     // Fetch link info to check if file needs to be deleted
-    $stmt = $pdo->prepare("SELECT file_path FROM footer_links WHERE id = ? LIMIT 1");
+    $stmt = $pdo->prepare("SELECT file_path, title FROM footer_links WHERE id = ? LIMIT 1");
     $stmt->execute([$id]);
     $link = $stmt->fetch();
 
@@ -27,7 +27,7 @@ try {
 
         // Delete from database
         $stmtDelete = $pdo->prepare("DELETE FROM footer_links WHERE id = ?");
-        $stmtDelete->execute([$id]);
+        $stmtDelete->execute([$id]); logActivity($_SESSION['admin_id'], 'delete', 'tautan footer', $link['title'], "Menghapus tautan footer '{$link['title']}'");
 
         header("Location: list.php?msg=delete_success");
         exit();

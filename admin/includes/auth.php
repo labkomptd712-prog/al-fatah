@@ -19,6 +19,7 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
 }
 
 require_once __DIR__ . '/roles.php';
+require_once __DIR__ . '/activity_logger.php';
 
 // Sinkronkan role dari database ke session (jika role di DB berubah)
 if (isset($_SESSION['admin_id'])) {

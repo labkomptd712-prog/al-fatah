@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $student_count = ($student_count_raw === '') ? null : (int) $student_count_raw;
         try {
             $stmt = $pdo->prepare("UPDATE classes SET class_name = ?, wali_kelas = ?, student_count = ? WHERE id = ?");
-            $stmt->execute([$class_name, $wali_kelas, $student_count, $id]);
+            $stmt->execute([$class_name, $wali_kelas, $student_count, $id]); logActivity($_SESSION['admin_id'], 'update', 'kelas', $class_name, "Mengubah kelas '{$class_name}'");
             header("Location: list.php?msg=edit_success");
             exit();
         } catch (PDOException $e) {

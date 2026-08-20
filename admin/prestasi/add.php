@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     if (move_uploaded_file($file_tmp, '../uploads/' . $image_name)) {
                         try {
                             $stmt = $pdo->prepare("INSERT INTO prestasi (nama_siswa, jenis_lomba, keterangan, foto, category_id) VALUES (?, ?, ?, ?, ?)");
-                            $stmt->execute([$nama_siswa, $jenis_lomba, $keterangan, $image_name, $category_id]);
+                            $stmt->execute([$nama_siswa, $jenis_lomba, $keterangan, $image_name, $category_id]); logActivity($_SESSION['admin_id'], 'create', 'prestasi', $nama_siswa, "Menambahkan prestasi baru untuk siswa '{$nama_siswa}'");
                             if (is_editor_role()) {
                                 header("Location: ../dashboard.php?msg=prestasi_add_success");
                             } else {

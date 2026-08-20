@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (empty($error)) {
             try {
                 $stmt = $pdo->prepare("INSERT INTO testimonials (name, position, quote, photo, display_order, photo_position) VALUES (?, ?, ?, ?, ?, ?)");
-                $stmt->execute([$name, $position, $quote, $photo_name, $display_order, $photo_position]);
+                $stmt->execute([$name, $position, $quote, $photo_name, $display_order, $photo_position]); logActivity($_SESSION['admin_id'], 'create', 'alumni & testimoni', $name, "Menambahkan testimoni baru dari alumni '{$name}'");
                 header("Location: list.php?msg=add_success");
                 exit();
             } catch (PDOException $e) {

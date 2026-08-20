@@ -40,10 +40,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($password !== '') {
                 $hash = password_hash($password, PASSWORD_DEFAULT);
                 $stmtUpdate = $pdo->prepare("UPDATE admins SET role = ?, password = ? WHERE id = ?");
-                $stmtUpdate->execute([$role, $hash, $id]);
+                $stmtUpdate->execute([$role, $hash, $id]); logActivity($_SESSION['admin_id'], 'update', 'admin', $username, "Mengubah data admin '{$username}'");
             } else {
                 $stmtUpdate = $pdo->prepare("UPDATE admins SET role = ? WHERE id = ?");
-                $stmtUpdate->execute([$role, $id]);
+                $stmtUpdate->execute([$role, $id]); logActivity($_SESSION['admin_id'], 'update', 'admin', $username, "Mengubah data admin '{$username}'");
             }
 
             // Jika admin mengedit akunnya sendiri, update session

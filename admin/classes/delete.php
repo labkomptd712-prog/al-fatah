@@ -14,7 +14,7 @@ if ($id <= 0) {
     exit();
 }
 try {
-    $pdo->prepare("DELETE FROM classes WHERE id = ?")->execute([$id]);
+    $stmtSelect = $pdo->prepare("SELECT class_name FROM classes WHERE id = ?"); $stmtSelect->execute([$id]); $className = $stmtSelect->fetchColumn(); $pdo->prepare("DELETE FROM classes WHERE id = ?")->execute([$id]); logActivity($_SESSION['admin_id'], 'delete', 'kelas', $className ?: '', "Menghapus kelas '" . ($className ?: '') . "'");
     header("Location: list.php?msg=delete_success");
 } catch (PDOException $e) {
     header("Location: list.php?err=" . urlencode($e->getMessage()));

@@ -65,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (empty($error)) {
             try {
                 $stmt = $pdo->prepare("INSERT INTO facilities (category_id, name, description, image, display_order) VALUES (?, ?, ?, ?, ?)");
-                $stmt->execute([$category_id, $name, $description, $image_name, $display_order]);
+                $stmt->execute([$category_id, $name, $description, $image_name, $display_order]); logActivity($_SESSION['admin_id'], 'create', 'fasilitas', $name, "Menambahkan fasilitas baru '{$name}'");
                 header("Location: list.php?msg=add_success");
                 exit();
             } catch (PDOException $e) {

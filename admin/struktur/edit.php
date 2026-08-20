@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $person_name_val = ($person_name === '') ? null : $person_name;
         try {
             $stmtUpdate = $pdo->prepare("UPDATE org_structure SET position_title = ?, person_name = ?, display_order = ? WHERE id = ?");
-            $stmtUpdate->execute([$position_title, $person_name_val, $display_order, $id]);
+            $stmtUpdate->execute([$position_title, $person_name_val, $display_order, $id]); logActivity($_SESSION['admin_id'], 'update', 'struktur organisasi', $person_name_val ?: $position_title, "Mengubah data anggota struktur organisasi '" . ($person_name_val ?: $position_title) . "'");
             header("Location: list.php?msg=edit_success");
             exit();
         } catch (PDOException $e) {

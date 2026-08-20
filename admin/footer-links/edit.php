@@ -115,7 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($error_msg === '') {
             try {
                 $stmt = $pdo->prepare("UPDATE footer_links SET category = ?, title = ?, file_path = ?, external_url = ?, display_order = ? WHERE id = ?");
-                $stmt->execute([$category, $title, $file_path, $db_external_url, $display_order, $id]);
+                $stmt->execute([$category, $title, $file_path, $db_external_url, $display_order, $id]); logActivity($_SESSION['admin_id'], 'update', 'tautan footer', $title, "Mengubah tautan footer '{$title}'");
                 header("Location: list.php?msg=edit_success");
                 exit();
             } catch (PDOException $e) {
